@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="43" height="40" viewBox="0 0 43 40">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #f48b20;
+      }
+
+      .cls-1, .cls-2 {
+        fill-rule: evenodd;
+      }
+
+      .cls-2, .cls-3 {
+        fill: #737373;
+      }
+    </style>
+  </defs>
+  <path id="Rounded_Rectangle_4_copy_3" data-name="Rounded Rectangle 4 copy 3" class="cls-1" d="M4.321,20.7l9.973-7.354L26.11,31.017,16.7,37.955A10.431,10.431,0,0,1,2,35.6,10.766,10.766,0,0,1,4.321,20.7Z"/>
+  <path id="Rounded_Rectangle_4_copy_4" data-name="Rounded Rectangle 4 copy 4" class="cls-2" d="M33.172,26.636l-16.6-13.094,7.84-9.651A10.351,10.351,0,0,1,39.183,2.474,10.837,10.837,0,0,1,40.569,17.53Zm-0.224-5L21.476,12.6,26.9,5.932A7.16,7.16,0,0,1,37.1,4.954a7.478,7.478,0,0,1,.958,10.4Z"/>
+  <ellipse class="cls-3" cx="36.031" cy="30.531" rx="2.188" ry="2.25"/>
+  <ellipse id="Ellipse_1_copy_6" data-name="Ellipse 1 copy 6" class="cls-3" cx="30.172" cy="33.516" rx="2.203" ry="2.234"/>
+  <ellipse id="Ellipse_1_copy_7" data-name="Ellipse 1 copy 7" class="cls-3" cx="36.766" cy="36.484" rx="1.453" ry="1.484"/>
+  <ellipse id="Ellipse_1_copy_8" data-name="Ellipse 1 copy 8" class="cls-3" cx="8.969" cy="2.688" rx="2.219" ry="2.219"/>
+  <ellipse id="Ellipse_1_copy_8-2" data-name="Ellipse 1 copy 8" class="cls-3" cx="8.969" cy="10.469" rx="2.219" ry="2.219"/>
+  <circle id="Ellipse_1_copy_8-3" data-name="Ellipse 1 copy 8" class="cls-3" cx="15.578" cy="4.922" r="1.453"/>
+</svg>

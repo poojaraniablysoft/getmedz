@@ -1,0 +1,95 @@
+<?php
+defined('SYSTEM_INIT') or die('Invalid Usage');
+?>  
+    <?php echo Message::getHtml(); ?>
+
+  <div class="cont-wrapper">
+
+    <div class="centered">
+        <h1>Ask A Doctor Online Any Question</h1>
+
+        <h2>Recently Asked Questions: </h2>
+
+        <ul class="list1">
+            <?php foreach ($unansweredQuest as $value): ?>
+                <li><?php echo subStringByWords($value['orquestion_question'], 70) ?></li>
+            <?php endforeach; ?>
+        </ul>
+        <?php echo $questionFrm->getFormTag(); ?>
+        <ul class="nav-area">
+            <?php
+            $array_first = current($categories);
+            foreach ($categories as $key => $category):
+                ?>
+                <li><a href="javascript:void(0)" class="<?php echo ($array_first == $category) ? 'active' : '' ?>">
+                        <input style="display:none;" type="radio" <?php echo ($array_first == $category) ? 'checked' : '' ?> title="<?php echo $category ?>" value="<?php echo $key ?>" name="orquestion_med_category">
+
+                        <?php echo $category
+                        ?></a></li>
+            <?php endforeach; ?>
+        </ul>
+
+        <div class="qst-block">
+
+            <h3>Please explain your <span>medical question</span> below</h3>
+            <?php echo $questionFrm->getFieldHtml('orquestion_question'); ?>
+          
+            <?php
+            echo $questionFrm->getFieldHtml('step');
+
+
+
+            echo $questionFrm->getFieldHtml('btn_login');
+            ?>
+  <div class="file_upload">
+                 <?php echo $questionFrm->getFieldHtml('fileupload'); ?>
+           
+                <div class="VisibleField"><input type="text" value="No file chosen" class="textbox" id="textfield"></div>
+            </div>
+            <div class="green-area"><img src="images/green-ball.png" alt=""><span id="doc_count"><?php echo $onlinedocs['count'] ?> </span> <?php echo ($onlinedocs['count']) > 1 ? "Doctors" : "Doctor" ?>  Online</div>
+        </div>
+        <?php echo $questionFrm->getExternalJs(); ?>
+        </form>
+
+
+        <!--Video Block -->
+
+        <div class="video-area">
+            <h4>Watch <span>Our Video</span></h4>
+            <p><iframe  width="465" height="307"
+                        src="<?php echo renderYoutubeUrl(CONF_HOMEPAGE_YOUTUBE_LINK) ?>">
+                </iframe></p>
+        </div>
+        <div class="qst-right-btm">
+            <h4>Questions recently answered by <span><?php echo CONF_DOCTOR_NAME;?></span></h4>
+            <div class="list-area">
+                <div class="head">Health Questions</div>
+                <?php foreach ($answeredQuest as $value): ?>
+                    <div class="row">
+                        <div class="lt"><?php echo subStringByWords($value['orquestion_question'], 70) ?> </div>
+                        <div class="rt">
+
+
+                            <a href=<?php echo generateUrl('home', 'viewquestion', array($value['orquestion_id'])); ?> rel="facebox"> view</a></div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
+            <div class="right-low-link">
+                <a href="javascript:void(0);" onclick="getAnswer()";> Get An Answer</a> <img src="images/bult2.png" alt="">
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+</div>
+<script>
+
+    jQuery(document).ready(function () {
+        jQuery('a[rel*=facebox]').facebox()
+    })
+</script>
+

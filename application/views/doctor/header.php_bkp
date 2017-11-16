@@ -1,0 +1,70 @@
+<?php
+defined('SYSTEM_INIT') or die('Invalid Usage');
+?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+        <?php
+        writeMetaTags();
+        echo Syspage::getJsCssIncludeHtml(false);
+        ?>
+
+        <style>
+            .active {
+                color:green !important;
+            }
+            .inactive {
+                color:gray !important;
+            }
+            .ion-android-delete{
+
+                color:red !important;
+            }
+            .ion-edit{
+                color:black !important;
+            }
+        </style>
+
+
+    </head>
+
+    <body>
+
+
+        <!--wrapper start here-->
+        <main id="wrapper">
+
+
+		<div id="msg_info"> <?php echo Message::getHtml(); ?></div>
+            <!--header start here-->
+            <header id="header">
+                <div class="headerwrap">
+                    <div class="one_third_grid"><a href="javascript:void(0);" class="menutrigger"></a></div>
+                    <div class="one_third_grid logo"><a style="color:#fff;" href="<?php echo CONF_WEBSITE_URL; ?>/doctor"><img src="/images/logo.png" alt="<?php echo CONF_WEBSITE_NAME;?>"></a></div>
+                    <div class="one_third_grid">
+                        <a href="<?php echo generateUrl('members', 'logout'); ?>" title="Logout" class="logout"></a>
+
+
+                    </div>
+                </div>  
+
+                <div class="searchwrap">
+                    <div class="searchform"><input type="text"></div><a href="javascript:void(0)" class="searchclose searchtoggle"></a>
+                </div>
+
+            </header>    
+            <div class="clearfix"></div>
+            <!--header end here-->
+            <!--body start here-->
+            <div id="body">
+
+
+                <?php include getViewsPath() . 'common/doctor/left-menu.php'; ?>  
+
+                <!--right panel start here-->
+
+                <!--right panel end here-->
+
+                <?php include getViewsPath() . 'common/doctor/right-menu.php'; ?>  

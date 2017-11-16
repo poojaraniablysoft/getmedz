@@ -1,0 +1,37 @@
+<form method="post" action="https://www.sandbox.paypal.com/cgi-bin/webscr" name="frmPay" id="frmPay"><table width="100%"><tbody><tr>
+<td></td>
+<td><input type="text" name="cmd" value="_xclick" title=""></td>
+</tr><tr>
+<td></td>
+<td><input type="text" name="business" value="nishan_1297919061_biz@dummyid.com" title=""></td>
+</tr><tr>
+<td></td>
+<td><input type="text" name="charset" value="utf-8" title=""></td>
+</tr><tr>
+<td></td>
+<td><input type="text" name="currency_code" value="USD" title=""></td>
+</tr><tr>
+<td></td>
+<td><input type="text" name="item_name" value="AD1491982865833" title=""></td>
+</tr><tr>
+<td></td>
+<td><input type="text" name="amount" value="9.00" title=""></td>
+</tr><tr>
+<td></td>
+<td><input type="text" name="quantity" value="1" title=""></td>
+</tr><tr>
+<td></td>
+<td><input type="text" name="image_url" value="http://getmedz.4demo.biz/image/site_logo" title=""></td>
+</tr><tr>
+<td></td>
+<td><input type="text" name="custom" value="" title=""></td>
+</tr><tr>
+<input title="" data-fatreq="{&quot;required&quot;:false}" type="hidden" name="return" value="http://yoyumm-new.4demo.biz/order/success"><input title="" data-fatreq="{&quot;required&quot;:false}" type="hidden" name="cancel_return" value="http://yoyumm-new.4demo.biz/order/cancel">
+<td></td>
+<td><input type="text" name="notify_url" value="http://getmedz.4demo.biz/public/index_noauth.php?url=ping/subscription" title=""></td>
+<td><input type="submit" name="submit" value="submit" title=""></td>
+</tr></tbody></table></form>
+
+
+<form name="frmPay" method="post" id="frmPay" action="https://www.sandbox.paypal.com/cgi-bin/webscr"><div class="row"></div><input title="" data-fatreq="{&quot;required&quot;:false}" type="hidden" name="cmd" value="_xclick"><input title="" data-fatreq="{&quot;required&quot;:false}" type="hidden" name="business" value="wzyprimary@dummyid.com"><input title="" data-fatreq="{&quot;required&quot;:false}" type="hidden" name="charset" value="utf-8"><input title="" data-fatreq="{&quot;required&quot;:false}" type="hidden" name="currency_code" value="USD"><input title="" data-fatreq="{&quot;required&quot;:false}" type="hidden" name="item_name" value="YYM1491983649"><input title="" data-fatreq="{&quot;required&quot;:false}" type="hidden" name="amount" value="276.29"><input title="" data-fatreq="{&quot;required&quot;:false}" type="hidden" name="quantity" value="1"><input title="" data-fatreq="{&quot;required&quot;:false}" type="hidden" name="image_url" value="http://yoyumm-new.4demo.biz/image/company-logo"><input title="" data-fatreq="{&quot;required&quot;:false}" type="hidden" name="custom" value="" class="empty"><input title="" data-fatreq="{&quot;required&quot;:false}" type="hidden" name="return" value="http://yoyumm-new.4demo.biz/order/success"><input title="" data-fatreq="{&quot;required&quot;:false}" type="hidden" name="cancel_return" value="http://yoyumm-new.4demo.biz/order/cancel"><input title="" data-fatreq="{&quot;required&quot;:false}" type="hidden" name="notify_url" value="http://yoyumm-new.4demo.biz/public/index_noauth.php?url=ping/order">
+<input type="submit" name="submit" value="submit"></form>

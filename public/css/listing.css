@@ -1,0 +1,133 @@
+
+
+.roundedbox{width: 100%;display: inline-block; position: relative;background: #fff;border-radius: 3px;box-shadow: 0 0px 3px rgba(0, 0, 0, 0.2); position: relative;
+    margin:24px 0 0 0;}
+.roundedbox .boxhead{width: 100%; position: relative; padding:15px;/*background: #fafafa; */border-radius: 3px 3px 0 0;border-bottom: 1px solid #eee;display: inline-block;}
+.roundedbox .boxhead h4{ padding: 0; font-size:18px; color: #333; font-weight: 500; text-transform:capitalize;}
+.roundedbox .boxhead h4 a{color: #333;}
+.roundedbox .boxhead h4 a:hover{color: #000;}
+.roundedbox .boxhead h6{ padding: 0; font-size:14px; color: #333; font-weight: 300; text-transform: capitalize;}
+.roundedbox .boxhead .themebtn{ float: right; margin: 0 0 0 10px; line-height: 24px; font-size: 11px; padding: 0 10px;}
+.roundedbox .boxbody{width: 100%; position: relative;}
+.roundedbox .boxbody:after {clear: both; content:""; display: block; height: 0; visibility:hidden;}
+.roundedbox .boxbody.space{ padding: 15px;}
+.boxgrids{width: 100%; display: table; table-layout:fixed;}
+.boxgrids .grid_1{ float: none; display: table-cell; vertical-align: top;width: 55%; padding:15px;}
+.boxgrids .grid_2{ float: none; display: table-cell; vertical-align: top;width: 25%; border-left: 1px solid #eee;border-right: 1px solid #eee;}
+.boxgrids .grid_3{ float: none; display: table-cell; vertical-align: top;width: 20%; position: static;}
+
+.itempic{width: 205px; height: 205px; border: 1px solid #eee; padding: 5px; margin: 0 auto;}
+.itempic img{display: block; width: 100%;}
+
+.descList{width:100%; display: inline-block; margin: 0;}
+.descList li{ padding:0 0 15px 0;display:block;}
+.descList li:last-child{ padding-bottom:0;}
+.descList li .captions{ width:25%; display: inline-block; vertical-align:top; font-size:13px; color:#4b4b4b;font-weight:600;}
+.descList li .value{ width:70%; display:inline-block; vertical-align:top;font-size:13px; color:#4b4b4b;}
+.boxgrids .grid_2 .descList{ padding:15px;}
+
+.iconLinks{width:100%; margin: 0; list-style: none; background: #fafafa; padding: 15px;border-top: 1px solid #eee;position: relative;}
+.iconLinks:after {clear: both; content:""; display: block; height: 0; visibility:hidden;}
+.iconLinks li{display: inline-block; margin:0 1px 0 0;}
+.iconLinks li a{ font-size:13px; color:#666666; padding:4px 8px 5px 8px; border-radius:2px; display:block;}
+.iconLinks li a:hover{ background:#2196f3; color:#FFF;}
+.ratingWrap {display: inline-block;}
+.boxgrids .grid_1 .ratingWrap {display: table;margin:10px auto 0;}
+.contentheight{min-height: 215px;}
+
+.verticalNav{ width:100%; margin:0; padding:0;list-style: none;}
+.verticalNav > li{ border-bottom:1px dashed #ddd;margin:0; padding:10px;}
+.verticalNav > li:last-child{border-bottom:none;}
+.verticalNav > li a{ text-transform: uppercase; padding:8px 10px; background:#fff; border-left:3px solid #fff; display:inline; font-size:12px; color:#737373; position:relative;}
+.verticalNav > li a:hover{background:#fff; color:#000; padding-left:15px; border-left:3px solid #c31422;}
+.verticalNav li a:before{ display:none; position:absolute; top:8px; left:-5px; z-index:999; content:""; border-bottom:10px solid transparent;border-top:10px solid transparent;border-left:10px solid #fff;}
+.verticalNav li:hover a:before{display:block;}
+.redtxt{color:#F00;}
+.yellowtxt{color:#ff9000;}
+.verticalNav .openWrap{ padding:10px 15px 15px;display:none; position:absolute; right:25%; width:500px; bottom:-1px; top:-1px;z-index:99; background:#FFF; border:1px solid #dcdcdc;
+-webkit-box-shadow: 0 1px 15px #b7b7b7; 
+-moz-box-shadow: 0 1px 15px #b7b7b7;  
+box-shadow: 0 1px 15px #b7b7b7;}
+.verticalNav .openWrap .wrapheight{ overflow:auto; height: 100%;}
+
+.verticalNav > li:hover .openWrap{display:block;}
+.verticalNav > li:hover a{background:#2196f3; color:#fff; border-left:3px solid #2196f3;}
+.verticalNav .openWrap h6{ font-size:18px; color:#333; line-height:1; padding:0 0 15px 0;font-weight: 500;}
+.ques-act > li:hover a{background:none; color:#000; border-left:none}
+.ques-act > li a{display:inline-block;border:none;padding:0;}
+.ques-act > li a:hover {
+    background:none;
+    border-left:none;
+    color: #000;
+    padding-left: 0;
+}
+.ques-act li a::before{border:none;}
+.ques-act .ion-ios-eye::before {
+   
+    display: inline-block;
+    font-size: 24px;
+    padding-right: 4px;
+    vertical-align: middle;
+}
+
+
+
+
+/*************************************************************** media queries ************************************************************************************/
+
+@media only screen and (max-width:1050px) {   
+.itempic{width: 150px; height: 150px;}
+.verticalNav > li:hover .openWrap{display: none;}
+.verticalNav > li:hover a{background: #fff; color: #333;border-left:3px solid #fff; padding-left:10px;} 
+.verticalNav > li:hover a:before{display: none;} 
+.verticalNav > li a.active{background: #2196f3; color: #fff;border-left: 3px solid #2196f3;}       
+    
+.iconLinks li a{padding: 4px 0 5px;font-size: 13px;}    
+.iconLinks li a:hover{background: none; color:inherit} 
+.iconLinks li{ margin: 0 10px 0 0;}  
+.boxgrids .grid_1{width: 18%;}   
+.descList li .captions, .descList li .value{font-size: 12px;}
+.contentheight{min-height: 1%;}
+.verticalNav > li a{font-size: 11px;}
+.descList li{padding-bottom: 12px;}    
+    
+}
+
+@media only screen and (max-width:767px) {
+.roundedbox .boxhead{padding: 10px; text-align: center;}
+.roundedbox .boxhead h4{font-size: 14px;font-weight: 600;}    
+.roundedbox .boxhead h6{font-size: 12px;}    
+.boxgrids .grid_1, .boxgrids .grid_2, .boxgrids .grid_3{width: 100%; display: block;}    
+.descList li .captions{width: 40%;font-size: 12px;}    
+.descList li .value{width: 60%;font-size: 12px;}   
+.iconLinks{padding: 10px; text-align: center;border-bottom: 1px solid #eee;}    
+.verticalNav .openWrap{right: 0; left: 0; top:0;width: 100%; position: relative;box-shadow: none; padding: 10px;border: none;bottom: auto;}    
+.verticalNav > li:hover  .openWrap{display: none;}   
+.verticalNav > li:hover a:before{display: none;}   
+.verticalNav > li a:after{content: "\f218";font-family: "Ionicons";font-size:13px; color: #999; position: absolute; right:8px; top:5px;}   
+
+.verticalNav > li a.active:after{content: "\f209"; color: #fff;}   
+.verticalNav > li a.active{background: #2196f3; color: #fff;border-left: 3px solid #2196f3;}   
+.verticalNav .openWrap h6{font-size: 14px;font-weight: 600;}    
+.contentheight{min-height: 1%;}  
+.iconLinks li a{padding: 4px 0 5px;font-size: 12px;}    
+.iconLinks li a:hover{background: none; color:inherit} 
+.iconLinks li{ margin: 0 10px 0 0;}   
+    
+}
+
+
+@media only screen and (min-width:768px) and (max-width:990px) {
+.verticalNav .openWrap{right: 0; left: 0; top:0;width: 100%; position: relative;box-shadow: none; padding: 10px;border: none;bottom: auto;}    
+.verticalNav > li a:after{content: "\f218";font-family: "Ionicons";font-size:14px; color: #999; position: absolute; right:8px; top:5px;}   
+.verticalNav > li a.active:after{content: "\f209"; color: #fff;}   
+.verticalNav > li a.active{background: #2196f3; color: #fff;border-left: 3px solid #2196f3;}      
+.verticalNav .openWrap h6{font-size: 14px;font-weight: 600;} 
+
+.roundedbox .boxhead{padding: 10px;}   
+.verticalNav > li:hover a:before{display: none;}       
+   
+    
+}
+.field_control.horizontal .field_label{width:34%;}
+

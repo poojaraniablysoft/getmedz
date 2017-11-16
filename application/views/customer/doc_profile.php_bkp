@@ -1,0 +1,84 @@
+<div class="cont-wrapper inner-main">
+
+    <div class="centered">
+
+        <div class="admin-cont-area"> 
+
+            <?php if ($question['orquestion_status'] != Question::QUESTION_PENDING): ?>
+                <?php include getViewsPath() . 'common/customer/doctor_block.php'; ?>  
+            <?php endif; ?>
+
+
+            <div class="your-doc-block">
+
+                <h3><?php echo $question['orquestion_question'] ?> <br>
+                    <span class="blue">Asked on</span> <span class="red"><?php echo $question['order_date'] ?></span>  <?php if($question['attachments']){?>
+                                        <a class="asklink" href="<?php echo generateUrl('doctor', 'getAttachment', array($question['orquestion_id'],Files::QUESTION_POST_ATTACHMENT)) ?>"><img align = "absbottom" alt = "" src = "<?php echo CONF_WEBROOT_URL ?>images/attchment.png"></a>
+                                        <?php } ?>   </h3>
+
+
+                <div id="question_reply">
+
+                </div>
+
+                <p class="blue4">**Please note that the information just provided cannot replace you going to a physician or competent provider and that you should consider seeking local attention at your own discretion. </p>
+<?php if ($question['orquestion_status'] != Question::QUESTION_CLOSED){?>
+		<?php if ($question['orquestion_status'] != Question::QUESTION_PENDING && intval($question['count_replies'])>0){ ?>
+                <p class="red4">Reply to this Answer </p>
+                <?php echo $replyFrm->getFormTag(); ?>
+                <?php echo $replyFrm->getFieldHtml('reply_text'); ?>
+
+                <?php echo $replyFrm->getFieldHtml('btn_reply'); ?>
+                <?php echo $replyFrm->getFieldHtml('add_attachment'); ?>
+                <?php if (intval($question['orquestion_status']) !== Question::QUESTION_CLOSED): ?>
+                    <?php echo $replyFrm->getFieldHtml('close_question'); ?>
+                <?php endif; ?>
+                <?php echo $replyFrm->getFieldHtml('reply_orquestion_id'); ?>
+                <?php echo $replyFrm->getFieldHtml('uploaded_files_id'); ?>
+                <?php echo $replyFrm->getExternalJs(); ?>
+                </form>
+                <?php echo $upFrm->getFormHtml(); ?>
+
+
+                <div class="wrapfield fupload" id="file_progress" style="display:none">
+
+
+
+                    <span >Uploading File...</span><span class="countvalue">0%</span>
+
+                </div>
+                    <br>
+                <div class="formwrapcenter uploadedFiles style='display:none'"> 
+                
+                    <ul class="uploaded_files"></ul></div>
+
+         <?php }else{ ?>
+		 <p class="red4">Please Wait While Doctor is Reviewing Your Question..... </p>
+			<?php } ?>
+			<?php } else{
+			?>	 <p class="red4"> Question CLOSED</p>
+					
+			<?php }?>
+		 </div>
+
+
+        </div>
+
+
+
+
+    </div>
+</div>
+
+<script>
+    var RepliesObj = {};
+    $(document).ready(function () {
+
+        RepliesObj = Reply(<?php echo $question['orquestion_id'] ?>);
+        RepliesObj.fetch_replies();
+
+    });
+
+
+</script>
+
