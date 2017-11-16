@@ -1,0 +1,8 @@
+.categories__box li {
+	color: #737373;
+	display: none;
+	font-size: 100px;
+	padding-top: 15px;
+	text-align: center;
+	text-transform: capitalize;
+}

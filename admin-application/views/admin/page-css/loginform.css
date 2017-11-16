@@ -1,0 +1,5 @@
+.login_message ul{ background-color:#ff7b61;}
+.login_message li{font-weight: normal; font-size: 13px; color: #fff; position: relative; padding:0 0 5px 20px;}
+.login_message li a{font-weight: normal; color: #fff; position: relative; text-decoration: none; cursor: default;}
+/*.div_error li:before {width:0; height:0; content: ""; border-bottom:11px solid #fff; border-left:8px solid transparent; border-right:7px solid transparent; position: absolute; left:-3px; top:4px;}*/
+.login_message li:before{content: "\f100";font-size:15px; color: #fff; font-family: "Ionicons"; line-height: 1; position: absolute; left:-2px; top:1px; text-shadow: none;}

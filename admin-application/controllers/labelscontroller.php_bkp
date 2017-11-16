@@ -1,0 +1,170 @@
+<?php
+class LabelsController extends BackendController {
+    
+	protected function getSearchForm() {
+        $frm=new Form('frmSearchLabels','frmSearchLabels');
+		$frm->setFieldsPerRow(2);
+		$frm->setExtra('class="web_form last_td_nowrap"');
+		$frm->setMethod('GET');
+		$frm->captionInSameCell(true);
+		$frm->setRequiredStarWith('not-required');
+		$frm->addHiddenField('', 'mode', "search");
+		$frm->addTextBox('Keyword', 'keyword','','',' class="small"');
+		$frm->addSubmitButton('','btn_submit','Search');
+		$frm->getField("btn_submit")->html_after_field='&nbsp;&nbsp;<a href="'.generateUrl('labels').'" class="clear_btn">Clear Search</a>';
+		$frm->setJsErrorDisplay('afterfield');
+        $frm->setAction(generateUrl('labels','listing'));
+		$frm->setTableProperties('width="100%" border="0" cellspacing="0" cellpadding="0" class="table_form_vertical"');
+        return $frm;
+    }
+	
+    function default_action($page) {
+		Syspage::addJs(array('../js/admin/jquery.jeditable.mini.js'), false);
+		$user_id = Admin::getLoggedinUserId();
+		if (!Admin::getAdminAccess($user_id,LANGUAGELABELS)) {
+             die(Admin::getUnauthorizedMsg());
+        }
+		$page = intval($page);
+		if ($page < 1)
+			$page = 1;
+		$pagesize = 50;
+		$criteria=array();
+		$criteria['pagesize'] = $pagesize;
+		$criteria['page'] = $page;
+		$frm=$this->getSearchForm();
+		$get = (array) getUrlQuery();
+		if(isset($get['mode'])) {
+			$frm->fill($get);
+			$criteria=array_merge($criteria,$get);
+		}
+		$this->set('search_form', $frm);
+		$this->set('arr_listing', $this->Labels->getLabels($criteria));
+		$this->set('pages', $this->Labels->getTotalPages());
+		$this->set('page', $page);
+		$this->set('start_record', ($page-1)*$pagesize + 1);
+		$end_record = $page * $pagesize;
+		$total_records = $this->Labels->getTotalRecords();
+		if ($total_records < $end_record) $end_record = $total_records;
+		$this->set('end_record', $end_record);
+		$this->set('total_records', $total_records);
+		$this->set('search_parameter',$get);
+		
+        $this->_template->render();
+    }
+
+    function form($label_id) {
+		if (!Admin::getAdminAccess($this->getLoggedAdminId(),LANGUAGELABELS)) {
+             die(Admin::getUnauthorizedMsg());
+        }
+        $label_id = intval($label_id);
+        $frm = $this->getForm($label_id);
+        if ($label_id > 0) {
+            $data = $this->Labels->getData($label_id);
+            $frm->fill($data);
+        }
+		$post = Syspage::getPostedVar();
+		if($_SERVER['REQUEST_METHOD'] == 'POST'){
+			if(!$frm->validate($post)){
+				Message::addErrorMessage($frm->getValidationErrors());
+			}else{
+					if($post['label_id'] != $label_id){
+						Message::addErrorMessage('Error: Invalid Request!!');
+						redirectUser(generateUrl('labels'));
+					}else{
+						if($this->Labels->addUpdateLabel($post)){
+							Message::addMessage('Success: Language label details added/updated successfully.');
+							redirectUser(generateUrl('labels'));
+						}else{
+							Message::addErrorMessage($this->Labels->getError());
+						}
+					}
+			}
+			$frm->fill($post);
+		}
+        $this->set('frm', $frm);
+        $this->_template->render(true,true);
+    }
+
+    protected function getForm($id) {
+        $frm = new Form('frmLabels');
+		$frm->setExtra(' validator="LabelsfrmValidator" class="web_form"');
+        $frm->setValidatorJsObjectName('LabelsfrmValidator');
+        $frm->addHiddenField('', 'label_id');
+		if ($id>0)
+			$frm->addRequiredField('Key', 'label_key','', '', 'readonly class="input-xlarge"');
+		else	
+			$frm->addRequiredField('Key', 'label_key','', '', ' class="input-xlarge"');
+		
+		$fld=$frm->addTextArea('Caption English', 'label_caption_en', '', 'label_caption_en', ' class="cleditor" rows="3"');
+		$fld=$frm->addTextArea('Caption Alternate Language', 'label_caption_es', '', 'label_caption_es', ' class="cleditor" rows="3"');
+		$frm->addSubmitButton('&nbsp;','btn_submit','Save changes');
+		$frm->setJsErrorDisplay('afterfield');
+		$frm->setTableProperties('width="100%" border="0" cellspacing="0" cellpadding="0" class="table_form_horizontal"');
+		$frm->setLeftColumnProperties('width="20%"');
+        return $frm;
+    }
+	
+	function delete($label_id) {
+		if (!Admin::getAdminAccess($this->getLoggedAdminId(),LANGUAGELABELS)) {
+             die(Admin::getUnauthorizedMsg());
+        }
+        if($this->Labels->deleteLabel($label_id)){
+			Message::addMessage('Success: Record has been deleted.');
+		}else{
+			Message::addErrorMessage($this->Labels->getError());
+		}
+		
+		redirectUserReferer();
+    }
+	
+	function getLabelContent($id, $lang)
+	{
+		$post = Syspage::getPostedVar();
+		// printArray($post);exit;
+		if(!$val= $this->Labels->getData($id))
+		{
+			echo '';
+		}
+		echo $val['label_caption_' . $lang];
+	}
+	function updateLabelField(){
+		$post = Syspage::getPostedVar();
+		$post["value"] = $post["value"];
+		$this->Labels->updateLabelText($post);
+		// echo html_entity_decode($post["value"]);
+		echo $post["value"];
+		//exit();
+	}
+	function listing($page = 1) {
+		Syspage::addJs(array('../js/admin/jquery.jeditable.mini.js'), false);
+        $page = intval($page);
+		if ($page < 1)
+			$page = 1;
+		$pagesize = 50;
+		$criteria=array();
+		$criteria['pagesize'] = $pagesize;
+		$criteria['page'] = $page;
+		$frm=$this->getSearchForm();
+		$get = (array) getUrlQuery();
+		if(isset($get['mode'])) {
+			$frm->fill($get);
+			$criteria=array_merge($criteria,$get);
+		}
+		$this->set('search_form', $frm);
+		$this->set('arr_listing', $this->Labels->getLabels($criteria));
+		$this->set('pages', $this->Labels->getTotalPages());
+		$this->set('page', $page);
+		$this->set('start_record', ($page-1)*$pagesize + 1);
+		$end_record = $page * $pagesize;
+		$total_records = $this->Labels->getTotalRecords();
+		if ($total_records < $end_record) $end_record = $total_records;
+		$this->set('end_record', $end_record);
+		$this->set('total_records', $total_records);
+		$this->set('search_parameter',$get);
+		$url = generateUrl('labels', 'listing');			
+		$frm=createHiddenFormFromPost("paginateForm",$url,array('page'),array('page'=>$page));
+		$this->set("paginateForm",$frm);
+        $this->_template->render(false,false);
+    }
+
+}

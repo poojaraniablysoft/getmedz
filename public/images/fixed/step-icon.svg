@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="80" height="56" viewBox="0 0 80 56">
+  <defs>
+    <style>
+      .cls-1, .cls-3 {
+        fill: #737373;
+      }
+
+      .cls-1 {
+        fill-rule: evenodd;
+      }
+
+      .cls-2 {
+        fill: #304770;
+      }
+
+      .cls-4, .cls-5, .cls-6 {
+        fill: #fff;
+      }
+
+      .cls-4 {
+        filter: url(#filter);
+      }
+
+      .cls-5 {
+        filter: url(#filter-2);
+      }
+
+      .cls-6 {
+        filter: url(#filter-3);
+      }
+    </style>
+    <filter id="filter" x="16" y="27" width="49" height="3" filterUnits="userSpaceOnUse">
+      <feFlood result="flood" flood-color="#737373"/>
+      <feComposite result="composite" operator="in" in2="SourceGraphic"/>
+      <feBlend result="blend" in2="SourceGraphic"/>
+    </filter>
+    <filter id="filter-2" x="64" y="27" width="3" height="13" filterUnits="userSpaceOnUse">
+      <feFlood result="flood" flood-color="#737373"/>
+      <feComposite result="composite" operator="in" in2="SourceGraphic"/>
+      <feBlend result="blend" in2="SourceGraphic"/>
+    </filter>
+    <filter id="filter-3" x="39" y="15" width="3" height="12" filterUnits="userSpaceOnUse">
+      <feFlood result="flood" flood-color="#737373"/>
+      <feComposite result="composite" operator="in" in2="SourceGraphic"/>
+      <feBlend result="blend" in2="SourceGraphic"/>
+    </filter>
+  </defs>
+  <path class="cls-1" d="M26,0H55V16H26V0Zm3,3H52V13H29V3Z"/>
+  <rect id="Rectangle_50_copy" data-name="Rectangle 50 copy" class="cls-2" y="40" width="29" height="16"/>
+  <path id="Rectangle_50_copy_3" data-name="Rectangle 50 copy 3" class="cls-1" d="M51,40H80V56H51V40Zm3,3H77V53H54V43Z"/>
+  <rect class="cls-3" x="13" y="27" width="3" height="13"/>
+  <rect id="Rectangle_51_copy_3" data-name="Rectangle 51 copy 3" class="cls-4" x="16" y="27" width="49" height="3"/>
+  <rect id="Rectangle_51_copy_2" data-name="Rectangle 51 copy 2" class="cls-5" x="64" y="27" width="3" height="13"/>
+  <rect id="Rectangle_51_copy" data-name="Rectangle 51 copy" class="cls-6" x="39" y="15" width="3" height="12"/>
+</svg>
