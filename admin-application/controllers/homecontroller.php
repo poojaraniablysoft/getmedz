@@ -224,7 +224,8 @@ class HomeController extends BackendController {
 	
 		$queries = array(
 			"DROP FUNCTION IF EXISTS `getTextWithoutTags`",
-			"DECLARE iStart, iEnd, iLength int;
+			"CREATE FUNCTION `getTextWithoutTags`(`Dirty` VARCHAR(4000)) RETURNS VARCHAR(4000) CHARSET latin1 BEGIN
+			DECLARE iStart, iEnd, iLength int;
     WHILE Locate( '<', Dirty ) > 0 And Locate( '>', Dirty, Locate( '<', Dirty )) > 0 DO
       BEGIN
         SET iStart = Locate( '<', Dirty ), iEnd = Locate( '>', Dirty, Locate('<', Dirty ));
