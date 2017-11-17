@@ -10,6 +10,7 @@ define('CONF_LIB_HALDLE_ERROR_IN_PRODUCTION', true);
 define ('CONF_URL_REWRITING_ENABLED', true);
 define('CONF_WEBSITE_URL','/');
 if($_SERVER['SERVER_NAME']=='poojarani.4demo.biz'){
+	echo"aa";
     define('CONF_WEBROOT_URL', '/');
 
     define('CONF_DB_SERVER', 'localhost');
@@ -18,13 +19,14 @@ if($_SERVER['SERVER_NAME']=='poojarani.4demo.biz'){
     define('CONF_DB_NAME', 'dev_getmedz');
 }elseif($_SERVER['SERVER_NAME']=='staging.4demo.biz'){
     define('CONF_WEBROOT_URL', '/');
-
+	echo"bb";
     define('CONF_DB_SERVER', 'localhost');
     define('CONF_DB_USER', 'staging');
     define('CONF_DB_PASS', 'staging');
     define('CONF_DB_NAME', 'staging_getmedz');
 }
 else{
+	echo "cc";
     define('CONF_WEBROOT_URL', '/');
     define('CONF_DB_SERVER', 'localhost');
     define('CONF_DB_USER', 'developer');
