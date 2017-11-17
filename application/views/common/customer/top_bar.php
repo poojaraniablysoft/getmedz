@@ -4,12 +4,12 @@
 			<div class="user__profile-large"> <span class="user__pic"> <img src="<?php echo generateUrl('image','getCustomerProfilePic',array(Members::getLoggedUserAttribute('user_id'),'35','35')) ?>" alt=""> </span> <span class="user__name"><?php echo $customerName=  Members::getLoggedUserAttribute('user_first_name')." ".Members::getLoggedUserAttribute('user_last_name');	?></span> 
 			</div>
 			<ul class="user__options">
-				<li><a href="<?php echo generateUrl('customer'); ?>"><i class="dropdown_icon"><img src="/images/fixed/doctor.svg" alt=""></i><?php echo getLabel('L_My_Questions');?></a></li>
-				<li><a href="<?php echo generateUrl(); ?>#orquestion_question"><i class="dropdown_icon"><img src="/images/fixed/doctor.svg" alt=""></i>
-				<?php echo getLabel('L_Ask_a_New_Quesiton');?>
+				<li><a href="<?php echo generateUrl('customer'); ?>"><i class="dropdown_icon"><img src="/images/fixed/doctor.svg" alt=""></i><span><?php echo getLabel('L_My_Questions');?></span></a></li>
+				<li><a href="<?php echo generateUrl(); ?>#orquestion_question"><i class="dropdown_icon"><img src="/images/fixed/doctor.svg" alt=""></i><span>
+				<?php echo getLabel('L_Ask_a_New_Quesiton');?></span>
 				</a></li>
-				<li><a href="<?php echo generateUrl('customer', 'profile'); ?>"><i class="dropdown_icon"><img src="/images/fixed/avatar.svg" alt=""></i><?php echo getLabel('L_User_Profile');?></a></li>				
-				<li><a href="<?php echo generateUrl('members', 'logout'); ?>"><i class="dropdown_icon"><img src="/images/fixed/shutdown.svg" alt=""></i><?php echo getLabel('L_Log_Out');?> </a></li>
+				<li><a href="<?php echo generateUrl('customer', 'profile'); ?>"><i class="dropdown_icon"><img src="/images/fixed/avatar.svg" alt=""></i><span><?php echo getLabel('L_User_Profile');?></span></a></li>				
+				<li><a href="<?php echo generateUrl('members', 'logout'); ?>"><i class="dropdown_icon"><img src="/images/fixed/shutdown.svg" alt=""></i><span><?php echo getLabel('L_Log_Out');?> </span></a></li>
 			 
 			</ul>
 		  </div>
