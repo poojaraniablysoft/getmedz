@@ -41,34 +41,49 @@ class DoctorController extends FrontController {
 
 
         global $db;
-        $page = Syspage::getPostedVar('page');
-        $post = Syspage::getPostedVar();
-        $orquestion_doctor_id = Members::getLoggedUserID();
-        $question = new Question();
-        $srch = $question->searchActiveQuestions();
-        $srch->joinTable('tbl_question_replies', 'LEFT JOIN', 'r.reply_orquestion_id=oq.orquestion_id', 'r');
-		$srch->addCondition('orquestion_doctor_id', '=', $orquestion_doctor_id);
-        $srch->addCondition('orquestion_status', '=', Question::QUESTION_REPLIED_BY_PATIENT);
-        $srch->addOrder('reply_date', 'desc');
+        
+		$doctorId  =  Members::getLoggedUserID();	
+		$replySrch = new SearchBase('tbl_question_replies');
+		$replySrch->setPageSize(1);
+		$replySrch->doNotCalculateRecords();
+		$replySrch->setPageNumber(1);
+		$replySrch->addOrder('reply_id','desc');
+		$srch =  Question::searchActiveQuestions();
+        $srch->joinTable('tbl_question_assign', 'INNER JOIN', 'qa.qassign_question_id=oq.orquestion_id', 'qa');
+        $srch->joinTable("(".$replySrch->getQuery().")", 'LEFT JOIN', 'r.reply_orquestion_id=oq.orquestion_id', 'qr');
+       // $srch->joinTable("(".$qstatusQuery->getQuery().")", 'LEFT JOIN', 'qs.qstatus_question_id=oq.orquestion_id', 'qs');
+		$srch->addCondition('qassign_doctor_id', '=', $doctorId);
+      
+        $interval = "";
+        if (!empty($filterBy)) {
+            switch ($filterBy) {
+                case "MONTH":
+                    $interval = " 1 DAY";
+					break;
+                case "WEEK":
+                    $interval = " 1 WEEK";
+						break;
+                case "SEMESTER":
+                    $interval = " 6 MONTH";
+                 
+                    break;
+            }
+			
+        }
+		$srch->addCondition('orquestion_status', '=', Question::QUESTION_REPLIED_BY_PATIENT);
         $srch->addGroupBy('orquestion_id');
-        $srch->addMultipleFields(array('orquestion_question', 'user_id', 'orquestion_id', 'CONCAT(user_first_name," " , user_last_name) as user_name', 'order_date', '(select reply_date from tbl_question_replies where reply_orquestion_id=oq.orquestion_id order by reply_id desc limit 1) as reply_date'));
-		$srch->setPageSize(1);		
+        $srch->addMultipleFields(array('orquestion_question', 'user_id', 'orquestion_id', 'CONCAT(user_first_name," " , user_last_name) as user_name', 'order_date','qassign_doctor_id','orquestion_doctor_id','orquestion_status','orquestion_last_updated','qr.reply_date'));
         $rs = $srch->getResultSet();
 		$arr_listing = $srch->fetch_all();
+		$this->set('arr_listing', $arr_listing); 
+
+		$allQuestions = Question::getDoctorQuestionCount();
+		$answeredQuestions = Question::getDoctorQuestionCount('answered');
+		$unansweredQuestions = Question::getDoctorQuestionCount('unanswered');
 		
-		if(count($arr_listing) < 1)
-		{	
-        $srch = $question->searchActiveQuestions();
-        $srch->joinTable('tbl_question_replies', 'LEFT JOIN', 'r.reply_orquestion_id=oq.orquestion_id', 'r');
-		$srch->addCondition('orquestion_doctor_id', '=', $orquestion_doctor_id);        
-        $srch->addOrder('reply_date', 'desc');
-        $srch->addGroupBy('orquestion_id');
-        $srch->addMultipleFields(array('orquestion_question', 'user_id', 'orquestion_id', 'CONCAT(user_first_name," " , user_last_name) as user_name', 'order_date', '(select reply_date from tbl_question_replies where reply_orquestion_id=oq.orquestion_id order by reply_id desc limit 1) as reply_date'));
-		$srch->setPageSize(1);		
-        $rs = $srch->getResultSet();
-		$arr_listing = $srch->fetch_all();
-		}
-		$this->set('arr_listing', $arr_listing);        		
+		$this->set('allQuestions',$allQuestions);
+		$this->set('answeredQuestions',$answeredQuestions);
+		$this->set('unansweredQuestions',$unansweredQuestions);
 		$this->render();
        
     }
@@ -255,15 +270,14 @@ class DoctorController extends FrontController {
         $srch->addFld(array('r.*', 'user_id', '(CASE WHEN '
             . 'reply_by=' . Question::QUESTION_REPLIED_BY_DOCTOR . '
 				  THEN CONCAT_WS(" ",doctor_first_name,doctor_last_name) ELSE CONCAT_WS(" ",user_first_name,user_last_name) END) as replier_name',
-            'order_date', 'count(file_record_id) as attachments')
+            'order_date', 'count(file_record_id) as attachments','category_name','doctor_city','state_name','doctor_summary as degrees')
         );
         $srch->addGroupBy('reply_id');
         $rs = $srch->getResultSet();
         $total_records = $srch->recordCount();
         $arr_replies = $db->fetch($rs);
         $this->set('reply', $arr_replies);
-
-
+		
         if ($post['reply_by'] == Members::DOCTOR_USER_TYPE) {
 
             $srch = $this->Question->searchActiveQuestions();
@@ -354,7 +368,7 @@ class DoctorController extends FrontController {
             $srch->addFld(array('r.*', 'user_id', '(CASE WHEN '
                 . 'reply_by=' . Question::QUESTION_REPLIED_BY_DOCTOR . '
 				  THEN CONCAT_WS(" ",doctor_first_name,doctor_last_name) ELSE CONCAT_WS(" ",user_first_name,user_last_name) END) as replier_name',
-                'order_date', 'count(file_record_id) as attachments')
+                'order_date', 'count(file_record_id) as attachments','category_name','doctor_city','state_name','doctor_summary as degrees')
             );
             $srch->addGroupBy('reply_id');
             $rs = $srch->getResultSet();
@@ -417,7 +431,7 @@ class DoctorController extends FrontController {
             //$srch->addCondition('file_record_type','=',QUESTION::REPLY_TYPE);
             $srch->addFld(array('r.*', '(CASE WHEN '
                 . 'reply_by=' . Question::QUESTION_REPLIED_BY_DOCTOR . '
-                      THEN CONCAT_WS(" ",doctor_first_name,doctor_last_name) ELSE CONCAT_WS(" ",user_first_name,user_last_name) END) as replier_name', 'count(file_record_id) as attachments')
+                      THEN CONCAT_WS(" ",doctor_first_name,doctor_last_name) ELSE CONCAT_WS(" ",user_first_name,user_last_name) END) as replier_name', 'count(file_record_id) as attachments','category_name','doctor_city','state_name','doctor_summary as degrees')
             );
 			
             $srch->addGroupBy('reply_id');
@@ -438,6 +452,15 @@ class DoctorController extends FrontController {
 
         $this->_template->render();
     }
+	
+	public function updateReplyView($questionId){
+		$data['reply_orquestion_id'] = $questionId;
+		$data['reply_view'] = 1;
+		$data['reply_by'] = Question::QUESTION_REPLIED_BY_PATIENT;	
+		$question = new Question();		
+		$question->updateReplyView($data);
+	}
+
 
     function getReplyFrm() {
 
@@ -977,6 +1000,7 @@ class DoctorController extends FrontController {
 			$fld= $srch->addCondition('orquestion_status', '=', Question::QUESTION_ASSIGNED);
 			$fld->attachCondition('orquestion_status', '=', Question::QUESTION_ACCEPTED,'OR');
 			$fld->attachCondition('orquestion_status', '=', Question::QUESTION_REPLIED_BY_PATIENT,'OR');
+			$srch->addOrder('orquestion_last_updated', 'DESC');
 		}elseif($type=='answered'){			
 			$fld=$srch->addCondition('orquestion_status', '=', Question::QUESTION_REPLIED_BY_PATIENT);
 			$fld->attachCondition('orquestion_status', '=', Question::QUESTION_REPLIED_BY_DOCTOR,'OR');
@@ -997,10 +1021,12 @@ class DoctorController extends FrontController {
 			} else {
 				$srch->addOrder('orquestion_last_updated', 'DESC');
 			}
+		}else{
+			$srch->addOrder('orquestion_asked_on', 'DESC');
 		}
 		
         $srch->addGroupBy('orquestion_id');
-        $srch->addMultipleFields(array('orquestion_question', 'user_id', 'orquestion_id', 'CONCAT(user_first_name," " , user_last_name) as user_name', 'order_date','qassign_doctor_id','orquestion_doctor_id','orquestion_status','orquestion_last_updated','qr.reply_date'));	
+        $srch->addMultipleFields(array('orquestion_question', 'user_id', 'orquestion_id', 'CONCAT(user_first_name," " , user_last_name) as user_name', 'order_date','qassign_doctor_id','orquestion_doctor_id','orquestion_status','orquestion_last_updated','qr.reply_date','orquestion_asked_on'));	
 		
 		$this->paginate($srch, $page, generateUrl('doctor', 'listquestions'));
         $this->render(false,false);

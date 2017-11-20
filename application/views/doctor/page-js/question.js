@@ -21,16 +21,24 @@ function uploadFile() {
         success: function (data) {
             $(".file_progress-js").hide();
             $(".up-btn-js").show();
-            test =data;
-            $(".uploaded_files").append('<li><label class="checkbox leftlabel"><input checked=checked onclick="remove_file(this);" type="checkbox" name="uploaded_files[]" value="' + test.msg[1] + '">' + test.msg[0] + '<i class="input-helper"></i></label></li>');
-            $fid = $("#uploaded_files_id").val();
-            if ($fid)
-                $("#uploaded_files_id").val($fid + ',' + test.msg[1]);
-            else
-                $("#uploaded_files_id").val(test.msg[1]);
-            if ($fid || test.msg[1] > 0) {
-                $("#uploadedFiles").show();
-            }
+            ans =data;
+			if(ans.status==1){
+				
+				$(".uploaded_files").append('<li><label class="checkbox leftlabel"><input checked=checked onclick="remove_file(this);" type="checkbox" name="uploaded_files[]" value="' + ans.msg[1] + '">' + ans.msg[0] + '<i class="input-helper"></i></label></li>');
+				$fid = $("#uploaded_files_id").val();
+				if ($fid)
+					$("#uploaded_files_id").val($fid + ',' + ans.msg[1]);
+				else
+					$("#uploaded_files_id").val(ans.msg[1]);
+				if ($fid || ans.msg[1] > 0) {
+					$("#uploadedFiles").show();
+				}
+			}
+			else{
+				$.systemMessage.error(ans.msg);
+				
+			}
+			$("input[name=fileupload]").val('');
         },
     });
 }
@@ -88,7 +96,7 @@ function submitForm(frm, v) {
 			for (x in editors){					
 				$('#idContent'+editors[x]).contents().find("body").html('');				
 			}
-            $('.uploadedFiles').html('');
+            $('.uploaded_files').html('');
          //  $('html, body').animate({scrollTop:  $scrollTo.offset().top}, 'slow');
 			 $.systemMessage.success(resp.msg);	
 					

@@ -182,6 +182,7 @@ abstract class Orderabstract extends Model {
 
     public function getQuestionData() {
         $questionFields = array(
+            'orquestion_name',
             'orquestion_question',
             'orquestion_med_category',
             'orquestion_age',
@@ -198,7 +199,7 @@ abstract class Orderabstract extends Model {
                 $arrayToSave[$value] = $this->data[$value];
             }
         }
-      //  $arrayToSave['orquestion_order_id'] = $this->order_id;
+      $arrayToSave['orquestion_asked_on'] = date("Y-m-d H:i:s");
 
         return $arrayToSave;
     }

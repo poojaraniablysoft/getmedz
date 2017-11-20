@@ -16,7 +16,7 @@ $arr_flds = array(
 	'customer_name'=>'Customer Name',
 	'order_date'=>'Order Date',
         'orquestion_question'=>'Question',
-        'reply_text'=>'Doctor Reply',
+       // 'reply_text'=>'Doctor Reply',
         'count_replies'=>'Replies',
 	'action'=>'Action'
 );
@@ -61,7 +61,7 @@ foreach ($arr_listing as $sn=>$row){
 			case 'action':
 			  $ul = $td->appendElement('ul', array('class' => 'actions'));
                         $li = $ul->appendElement('li');
-				if(CONF_REQUIRED_REPLY_APPROVAL){
+			/* 	if(CONF_REQUIRED_REPLY_APPROVAL){
 				
 					if($row['orquestion_reply_status']==0){
 							$add_class='pending';
@@ -91,7 +91,7 @@ foreach ($arr_listing as $sn=>$row){
 							
 					}
                          
-				}
+				} */
 				 $li->appendElement('a', array('href'=>  generateUrl('Questions','view',array($row['orquestion_id'])), 'title' => 'View'), '<i class="ion-eye icon"></i>', true);
 				
 				break;

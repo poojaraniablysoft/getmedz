@@ -50,7 +50,7 @@ class MembersController extends FrontController {
     }
 
     function getDashboard() {
-        $user_type = $this->Members->getLoggedUserAttribute('user_type');
+      $user_type = $this->Members->getLoggedUserAttribute('user_type');
         if ($user_type == Members::CUSTOMER_USER_TYPE) {
             redirectUser(generateUrl('customer', ''));
         } elseif ($user_type == Members::DOCTOR_USER_TYPE) {
@@ -110,7 +110,7 @@ class MembersController extends FrontController {
         } else {
             $this->Members->updateCookie($user_id, true, Members::CUSTOMER_USER_TYPE); /* destroy any previously set cookie */
         }
-        redirectUser(generateUrl('customer', 'dashboard'));
+        redirectUser(generateUrl('customer', ''));
     }
 
     function validateDoctorLogin() {

@@ -39,10 +39,10 @@ class askQuestionController extends Controller {
     }
 
     function default_action() {
-		if (!Members::isCustomerLogged()) {
+		/* if (!Members::isCustomerLogged()) {
 			Message::addErrorMessage(Utilities::getLabel('LBL_Please_login_with_cutomer_account'));
 			redirectUser(Utilities::generateUrl());
-		}
+		} */
 		$step = Syspage::getPostedVar('step');	
 		$postedData = Syspage::getPostedVar();	
 		if(!isset($_POST) && $step!=1){

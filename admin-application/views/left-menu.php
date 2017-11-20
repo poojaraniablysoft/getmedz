@@ -38,6 +38,7 @@
 					<li><a href="<?php echo generateUrl('socialmedia'); ?>"  class="<?php if (($controller=="socialmedia") ):?>active <?php endif; ?>">Social Platforms Management</a></li>
 					<li ><a href="<?php echo generateUrl('subscriptions', ''); ?>"  class="<?php if (($controller=="subscriptions") ):?>active <?php endif; ?>">Subscription Management</a> </li>
 					<li><a href="<?php echo generateUrl('testimonials'); ?>"  class="<?php if (($controller=="testimonials") ):?>active <?php endif; ?>">Testimonials Management</a></li>
+					<li><a href="<?php echo generateUrl('emailtemplates'); ?>"  class="<?php if (($controller=="emailtemplates") ):?>active <?php endif; ?>">Email Templates Management</a></li>
 					
 				</ul>
 			</li>

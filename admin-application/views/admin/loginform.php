@@ -42,10 +42,10 @@ $(document).ready(function(){document.frmLogin.username.focus();});
 <div class="system_message"><?php echo Message::getHtml(); ?></div>
         <div class="backlayer">
             <div class="layerLeft" style="background-image:url(<?php echo CONF_WEBROOT_URL;?>admin/images/Doctor.jpg); background-repeat:no-repeat;">
-                <figure class="logo" style="color:#fff"><img alt="<?php echo CONF_WEBSITE_NAME;?>" src="/images/logo.png"></figure>
+                <figure class="logo" style="color:#fff"><img alt="<?php echo CONF_WEBSITE_NAME;?>" src="<?php echo generateUrl('image', 'site_admin_logo',array(CONF_ADMIN_LOGO), CONF_WEBROOT_URL)?>"></figure>
             </div>
             <div class="layerRight" style="background-image:url(<?php echo CONF_WEBROOT_URL;?>admin/images/Doctor.jpg); background-repeat:no-repeat;">
-                <figure class="logo" style="color:#fff"><img alt="<?php echo CONF_WEBSITE_NAME;?>" src="/images/logo.png"></figure>
+                <figure class="logo" style="color:#fff"><img alt="<?php echo CONF_WEBSITE_NAME;?>" src="<?php echo generateUrl('image', 'site_admin_logo',array(CONF_ADMIN_LOGO), CONF_WEBROOT_URL)?>"></figure>
             </div>
         </div>
         <div class="panels">

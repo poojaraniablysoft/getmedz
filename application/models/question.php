@@ -24,7 +24,7 @@ class Question extends Model {
     CONST STEP_5 = 5;
 
     
-    public static $QuestionStatus=array(Question::QUESTION_ACCEPTED => 'Accepted', Question::QUESTION_PENDING => 'Pending',Question::QUESTION_REPLIED_BY_DOCTOR =>'Doctor Replied', Question::QUESTION_REPLIED_BY_PATIENT => 'Followup', Question::QUESTION_CLOSED => 'Closed');
+    public static $QuestionStatus=array(Question::QUESTION_ACCEPTED => 'Accepted',Question::QUESTION_ASSIGNED => 'Assigned', Question::QUESTION_PENDING => 'Pending',Question::QUESTION_REPLIED_BY_DOCTOR =>'Doctor Replied', Question::QUESTION_REPLIED_BY_PATIENT => 'Followup', Question::QUESTION_CLOSED => 'Closed');
     
     public function __construct() {
         parent::__construct();
@@ -74,6 +74,8 @@ class Question extends Model {
         $record = new TableRecord('tbl_question_status');
         $record->assignValues($data);
 		$success = $record->addNew();  
+		mail("pooja.rani@ablysoft.com","UPdate question Status",serialize($data));
+		
         if (!$success) {           
             $this->error = $record->getError();
 			
@@ -121,11 +123,22 @@ class Question extends Model {
 
     public function getReplies() {
         //AND reply_by=' . Question::QUESTION_REPLIED_BY_PATIENT
+		
+		$degreeSrch = new SearchBase('tbl_doctor_degrees','dd');
+		$degreeSrch->joinTable('tbl_degrees', 'LEFT JOIN', 'd.degree_id=dd.docdegree_id','d');
+		$degreeSrch->joinTable('tbl_doctors', 'LEFT JOIN', 'doc.doctor_id=dd.docdegree_doctor_id','doc');
+		$degreeSrch->addMultipleFields(array('GROUP_CONCAT(degree_name) as degrees','doctor_id'));
+		$degreeSrch->doNotCalculateRecords();
+		$degreeSrch->doNotLimitRecords();
+		$degreeSrch->addGroupBy('doctor_id');
         $srch = new SearchBaseNew('tbl_question_replies', 'r');
         $srch->joinTable('tbl_order_questions', 'INNER JOIN', 'r.reply_orquestion_id=oq.orquestion_id  ', 'oq');
         $srch->joinTable('tbl_orders', 'INNER JOIN', 'o.order_id=oq.orquestion_order_id  ', 'o');
         $srch->joinTable('tbl_users', 'LEFT JOIN', 'u.user_id=o.order_user_id ', 'u');
         $srch->joinTable('tbl_doctors', 'LEFT JOIN', 'd.doctor_id=oq.orquestion_doctor_id  AND reply_by=' . Question::QUESTION_REPLIED_BY_DOCTOR, 'd');
+		$srch->joinTable('tbl_medical_categories', 'LEFT JOIN', 'd.doctor_med_category=mc.category_id  ', 'mc');
+		$srch->joinTable('tbl_states', 'LEFT JOIN', 'd.doctor_state_id=s.state_id  ', 's');
+		$srch->joinTable('('.$degreeSrch->getQuery().')', 'LEFT JOIN', 'deg.doctor_id=d.doctor_id  ', 'deg');
         return $srch;
     }
 	
@@ -318,6 +331,148 @@ class Question extends Model {
 		 $Email->questionList = array($questionId);
 		 $Email->questionPostEmail();
 		 return true;
+	}
+	
+	public function updateReplyView($data){
+		
+		$updateArr = array();
+		$updateArr['reply_view'] = $data['reply_view'];
+		$record = new TableRecord(tbl_question_replies);
+        $record->assignValues($updateArr);
+		
+		$success = $record->update(array('smt' => 'reply_orquestion_id = ? and reply_by =?', 'vals' => array($data['reply_orquestion_id'],$data['reply_by'])));
+        if (!$success) {           
+            $this->error = $record->getError();
+        }
+        return $success;
+	}
+	
+	public function getQuestionsCount($status = 0)
+	{
+		global $db;
+		$user_id = Members::getLoggedUserID();        
+        $question = $this->searchQuestions();
+       
+
+       
+        //  $question->addCondition('reply_approved','=','1');
+        $question->addGroupBy('orquestion_id');
+        $question->addCondition('order_user_id', '=', $user_id);
+		switch($status){
+			case Question::QUESTION_ACCEPTED:
+				$cnd = $question->addCondition('orquestion_status', '=',Question::QUESTION_ACCEPTED);
+				$cnd->attachCondition('orquestion_status', '=',Question::QUESTION_REPLIED_BY_DOCTOR);
+				$cnd->attachCondition('orquestion_status', '=',Question::QUESTION_REPLIED_BY_PATIENT);
+				$cnd->attachCondition('orquestion_status', '=',Question::QUESTION_ESCLATED_TO_ADMIN);
+				$cnd->attachCondition('orquestion_status', '=',Question::QUESTION_CLOSED);
+					
+				break;
+			case Question::QUESTION_ASSIGNED:
+				$cnd = $question->addCondition('orquestion_status', '=',Question::QUESTION_ASSIGNED);
+				break;
+			case Question::QUESTION_REPLIED_BY_DOCTOR:
+				$cnd = $question->addCondition('orquestion_status', '=',Question::QUESTION_REPLIED_BY_DOCTOR);
+				$cnd->attachCondition('orquestion_status', '=',Question::QUESTION_REPLIED_BY_PATIENT);
+					break;
+			case Question::QUESTION_CLOSED:
+				$cnd = $question->addCondition('orquestion_status', '=',Question::QUESTION_CLOSED);
+					break;
+		}
+	
+		$rs = $question->getResultSet();
+	
+		return $question->recordCount();
+		
+	}
+	public static  function getDoctorQuestionCount($type='')
+	{
+		
+		$doctorId  =  Members::getLoggedUserID();	
+		$replySrch = new SearchBase('tbl_question_replies');
+		$replySrch->setPageSize(1);
+		$replySrch->doNotCalculateRecords();
+		$replySrch->setPageNumber(1);
+		$replySrch->addOrder('reply_id','desc');
+		$srch =  Question::searchActiveQuestions();
+        $srch->joinTable('tbl_question_assign', 'INNER JOIN', 'qa.qassign_question_id=oq.orquestion_id', 'qa');
+        $srch->joinTable("(".$replySrch->getQuery().")", 'LEFT JOIN', 'r.reply_orquestion_id=oq.orquestion_id', 'qr');
+       // $srch->joinTable("(".$qstatusQuery->getQuery().")", 'LEFT JOIN', 'qs.qstatus_question_id=oq.orquestion_id', 'qs');
+		$srch->addCondition('qassign_doctor_id', '=', $doctorId);
+      
+        $interval = "";
+        if (!empty($filterBy)) {
+            switch ($filterBy) {
+                case "MONTH":
+                    $interval = " 1 DAY";
+					break;
+                case "WEEK":
+                    $interval = " 1 WEEK";
+						break;
+                case "SEMESTER":
+                    $interval = " 6 MONTH";
+                 
+                    break;
+            }
+			
+        }
+		if($type=='unanswered'){
+			$fld= $srch->addCondition('orquestion_status', '=', Question::QUESTION_ASSIGNED);
+			$fld->attachCondition('orquestion_status', '=', Question::QUESTION_ACCEPTED,'OR');
+			$fld->attachCondition('orquestion_status', '=', Question::QUESTION_REPLIED_BY_PATIENT,'OR');
+		}elseif($type=='answered'){			
+			//$fld=$srch->addCondition('orquestion_status', '=', Question::QUESTION_REPLIED_BY_PATIENT);
+			$fld=$srch->addCondition('orquestion_status', '=', Question::QUESTION_REPLIED_BY_DOCTOR);
+			$fld->attachCondition('orquestion_status', '=', Question::QUESTION_CLOSED,'OR');
+			$fld->attachCondition('orquestion_status', '=', Question::QUESTION_ESCLATED_TO_ADMIN,'OR');
+			if($interval)
+			$cnd = $srch->addDirectCondition("r.reply_date > DATE_SUB( NOW() , INTERVAL $interval )");
+			if (!empty($sortBy)) {
+				$cnd = $srch->addOrder('order_date', 'ASC');
+			} else {
+				$srch->addOrder('order_date', 'DESC');
+			}
+		}elseif($type=='closed'){			
+			//$cnd = $srch->addDirectCondition("orquestion_last_updated > DATE_SUB( NOW() , INTERVAL $interval )");
+			$srch->addCondition('orquestion_status', '=', Question::QUESTION_CLOSED);
+			if($interval)
+			$cnd = $srch->addDirectCondition("orquestion_last_updated > DATE_SUB( NOW() , INTERVAL $interval )");
+			if (!empty($sortBy)) {
+            $cnd = $srch->addOrder('orquestion_last_updated', 'ASC');
+			} else {
+				$srch->addOrder('orquestion_last_updated', 'DESC');
+			}
+		}
+		
+        $srch->addGroupBy('orquestion_id');
+        $srch->addMultipleFields(array('orquestion_question', 'user_id', 'orquestion_id', 'CONCAT(user_first_name," " , user_last_name) as user_name', 'order_date','qassign_doctor_id','orquestion_doctor_id','orquestion_status','orquestion_last_updated','qr.reply_date'));	
+		
+
+        $srch->addFld(
+           
+            'orquestion_id'
+           
+        );
+        //  $question->addCondition('reply_approved','=','1');
+        $srch->addGroupBy('orquestion_id');
+        $rs = $srch->getResultSet();
+		$result = $srch->recordCount();
+		return $result;
+		
+	}
+	
+	public function getAssignmentHistory($quetionId = 0){
+		global $db;
+		$srch = new SearchBase('tbl_question_status');
+		$srch->joinTable('tbl_question_assign','LEFT JOIN','qstatus_question_id=qassign_question_id');
+		$srch->joinTable('tbl_doctors','LEFT JOIN','qassign_doctor_id=doctor_id');
+		$srch->addMultipleFields(array('CONCAT(doctor_first_name," ",doctor_last_name) as doctor_name','qassign_assigned_on'));
+		$srch->addCondition('qstatus_status','=',Question::QUESTION_ASSIGNED);
+		$srch->addCondition('qstatus_question_id','=',$quetionId);
+		$srch->addOrder('qassign_assigned_on','desc');
+		$srch->addGroupBy('qstatus_id');
+		$rs = $srch->getResultSet();
+		$result =  $db->fetch_all($rs);
+		return $result;
 	}
 
 }

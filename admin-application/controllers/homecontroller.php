@@ -117,6 +117,7 @@ class HomeController extends BackendController {
         $srch->addCondition('orquestion_status', '=', Question::QUESTION_REPLIED_BY_DOCTOR, 'AND');
         $srch->addCondition('orquestion_status', '=', Question::QUESTION_REPLIED_BY_PATIENT, 'OR');
         $srch->addCondition('orquestion_status', '=', Question::QUESTION_CLOSED);
+		$srch->addGroupBy('orquestion_id');
         $rs = $srch->getResultSet();
         $records = $db->fetch($rs);
         $total_records = $srch->recordCount();
@@ -127,7 +128,7 @@ class HomeController extends BackendController {
 
         global $db;
         $srch = Question::searchActiveQuestions();
-
+		$srch->addGroupBy('orquestion_id');
         $srch->addCondition('orquestion_status', '=', Question::QUESTION_CLOSED, 'AND');
         $rs = $srch->getResultSet();
         $records = $db->fetch($rs);
@@ -151,7 +152,7 @@ class HomeController extends BackendController {
 
         global $db;
         $srch = Question::searchActiveQuestions();
-
+		$srch->addGroupBy('orquestion_id');
         $rs = $srch->getResultSet();
         $total_records = $srch->recordCount();
         return $total_records;

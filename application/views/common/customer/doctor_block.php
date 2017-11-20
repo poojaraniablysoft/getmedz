@@ -26,10 +26,22 @@
                           <td><strong>Name: </strong> <?php echo doctorDisplayName($question['doctor_name']); ?></td>
                           <td><strong>Email: </strong><?php echo doctorDisplayName($question['doctor_email']); ?></td>
                         </tr>
-                        <tr>
-                          <td><?php echo intval($question['doc_rating']) ?> Rating <?php echo createStar('doc_rating2', intval($question['doc_rating'])) ?></td>
-                          <td><a href="javascript:void(0)" onclick="updateCustomQuestionStatus(<?php echo $question['orquestion_id'].",".Question::QUESTION_CLOSED.",".$question['orquestion_status'] ?>)">Write a Review</a></td>
+						  <tr>
+						<?php if($question['doc_rating']==0 && $question['orquestion_status']!= Question::QUESTION_CLOSED){?>
+                          
+                          <td colspan="2"><a class="button button--fill button--secondary" href="javascript:void(0)" onclick="updateCustomQuestionStatus(<?php echo $question['orquestion_id'].",".Question::QUESTION_CLOSED.",".$question['orquestion_status'] ?>)">Close Question</a></td>
+						<?php } else if($question['doc_rating']==0){
+							?>
+							  
+                          
+                          <td colspan="2"><a href="javascript:void(0)" onclick="reviewDoctor(<?php echo $question['orquestion_id'];?>)">Write a Review</a></td>
+                        
+							<?php 
+						} else{
+							?>  <td colspan="2"><?php echo intval($question['doc_rating']) ?> Rating <?php echo createStar('doc_rating2', intval($question['doc_rating'])) ?></td>
+						<?php }?>
                         </tr>
+                      
                         <!--tr>
                           <td><strong>Age: </strong> 10-17</td>
                           <td><strong>Member Since:</strong> 2015-11-09</td>

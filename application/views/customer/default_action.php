@@ -25,7 +25,7 @@
                             <div class="stats stats--second">
                                 <img src="/images/fixed/answers.svg" class="stats__icon">
                                 <p> <?php echo getLabel('L_My_Accepted_Questions');?> </p>
-                                <h2><?php echo $accepted_question_count;?></h2>
+                                <h2><?php echo ($accepted_question_count)?$accepted_question_count:0;?></h2>
                                 <a href="<?php echo generateUrl('customer', ''); ?>" class="stats__link"></a>
                             </div>
                         </div></li>
@@ -33,7 +33,7 @@
                             <div class="stats stats--third">
                                 <img src="/images/fixed/unanswered.svg" class="stats__icon">
                                 <p> <?php echo getLabel('L_My_Pending_Questions');?></p>
-                                <h2><?php echo $pending_question_count;?></h2>
+                                <h2><?php echo ($pending_question_count)?$pending_question_count:0;?></h2>
                                 <a href="<?php echo generateUrl('customer', ''); ?>" class="stats__link"></a>
                             </div>
                         </div></li>
@@ -42,9 +42,9 @@
                     
                 
                 </div>
-                <h2 class="dashboard_subtitle"><?php echo getLabel('L_Pending_Questions');?> </h2>
+                <h2 class="dashboard_subtitle"><?php echo getLabel('L_FollowUp_Questions');?> </h2>
 
-				<?php include getViewsPath() . 'common/customer/pending_questions.php'; ?>
+				<?php include getViewsPath() . 'customer/listing.php'; ?>
 				
                 </div>
                 </div>

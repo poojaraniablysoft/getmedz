@@ -398,6 +398,18 @@ class Members extends Model {
         }
         return true;
     }
+	static function doCookieLogin(){
+		  if (!isset($_COOKIE['askdoctor_remember']))
+                    return false;
+
+                $cookie_arr = explode('|', $_COOKIE['askdoctor_remember']);
+				 $members = new Members();
+                if ($members->validateCookie($cookie_arr, $user_data)) {
+                    if (!$members->validateCustomerLogin($user_data['user_email'], $user_data['user_password'], true))
+                        $members->updateCookie($_SESSION['logged_user']['user_id'], true, Members::CUSTOMER_USER_TYPE);
+                }
+	}
+
 
 }
 

@@ -23,7 +23,7 @@ class QuestionsController extends BackendController {
         $frm->setTableProperties("class='table_form_vertical'");
         $fld=$frm->addTextBox('Keywords', 'keyword');
         $fld->extra="placeholder='User First name,Doctor First name,Question Text'";
-        $frm->addSelectBox('Status', 'orquestion_status', array(Question::QUESTION_ACCEPTED => 'Accepted Questions', Question::QUESTION_PENDING => 'Pending Questions', Question::QUESTION_REPLIED_BY_DOCTOR => 'Followup Questions', Question::QUESTION_CLOSED => 'Closed Questions'), '', '', 'All Questions');
+        $frm->addSelectBox('Status', 'orquestion_status', array(Question::QUESTION_ACCEPTED => 'Accepted Questions', Question::QUESTION_ACCEPTED => 'Pending Questions', Question::QUESTION_REPLIED_BY_DOCTOR => 'Followup Questions',Question::QUESTION_REPLIED_BY_PATIENT => 'Follow up By user',Question::QUESTION_ESCLATED_TO_ADMIN => 'Esclated to Admin', Question::QUESTION_CLOSED => 'Closed Questions'), '', '', 'All Questions');
         $frm->addTextBox('Order ID#', 'order_id');
         $fld1 = $frm->addSubmitButton('', 'btn_submit', 'Search', 'btn_submit', 'style="cursor:pointer;"');
         $fld2 = $frm->addButton('', 'reset', 'Show All', '', 'class="cancel_search" style="margin-left:10px; cursor:pointer;"');
@@ -39,7 +39,7 @@ class QuestionsController extends BackendController {
         $post = Syspage::getPostedVar();
         $question = new Question();
         $question = $question->searchActiveQuestions();
-		$question->addCondition('reply_by', '=', Question::QUESTION_REPLIED_BY_DOCTOR);
+		//$question->addCondition('reply_by', '=', Question::QUESTION_REPLIED_BY_DOCTOR);
         //$question->joinTable('tbl_question_replies', 'LEFT JOIN', 'r.reply_orquestion_id=oq.orquestion_id  AND reply_by=' . Question::QUESTION_REPLIED_BY_DOCTOR, 'r');
         // $question->joinTable('tbl_doctors', 'LEFT JOIN', 'd.doctor_id=oq.orquestion_doctor_id  AND reply_by=' . Question::QUESTION_REPLIED_BY_DOCTOR, 'dr');
 
@@ -70,7 +70,8 @@ class QuestionsController extends BackendController {
         if (!empty($post['order_id'])) {
             $cnd = $question->addCondition('order_id', '=', $post['order_id'],'AND');
         }
-        if (isset($post['orquestion_status'])) {
+	
+        if ($post['orquestion_status']>0) {
             $cnd = $question->addCondition('orquestion_status', '=', intval($post['orquestion_status']),'AND');
         }
 		
@@ -126,7 +127,7 @@ class QuestionsController extends BackendController {
 
         $srch = $question->searchQuestions();
         $srch->addCondition('orquestion_id', '=', $orquestion_id);
-        $srch->addMultipleFields(array('orquestion_reply_status', 'orquestion_id', 'order_user_id', 'orquestion_question', 'orquestion_doctor_id', 'orquestion_med_history', 'orquestion_seen_doctor', 'order_date', 'CONCAT(user_first_name," " , user_last_name) as user_name', 'orquestion_age', 'orquestion_gender', 'user_added_on', 'user_email', 'user_id','COUNT(file_id) as have_file'));
+        $srch->addMultipleFields(array('orquestion_reply_status', 'orquestion_id', 'order_user_id', 'orquestion_question', 'orquestion_doctor_id', 'orquestion_med_history', 'orquestion_seen_doctor', 'order_date', 'CONCAT(user_first_name," " , user_last_name) as user_name', 'orquestion_age', 'orquestion_gender', 'user_added_on', 'user_email', 'user_id','COUNT(file_id) as have_file','orquestion_weight'));
         $srch->addGroupBy('orquestion_id');
 
         $rs = $srch->getResultSet();
@@ -149,8 +150,12 @@ class QuestionsController extends BackendController {
 
             $this->set('replies', $replies);
         }
+		
+		$assignmentHistory =   $question->getAssignmentHistory($orquestion_id);
+		
 		$this->b_crumb->add("Question", Utilities::generateUrl("questions", "view"));
 		$this->set('breadcrumb', $this->b_crumb->output());
+		$this->set('assignmentHistory', $assignmentHistory);
         $this->_template->render();
     }
 

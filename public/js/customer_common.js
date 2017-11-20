@@ -7,8 +7,15 @@ function reviewDoctor(question_id) {
 
     var data = 'question_id=' + question_id;
     callAjax(reviewUrl, data + '&outmode=html', function (t) {
-
-        $.facebox(t)
+	
+			var ans = parseJsonData(t);
+			console.log(ans);
+			if(ans.status==0){
+				$.systemMessage.error(ans.msg);
+			}else{
+				$.facebox(t)
+			}
+		
     });
 
 
@@ -30,7 +37,7 @@ function updateCustomQuestionStatus($question_id, $status,$oldStatus) {
                 return;
             } else {
 				
-                    reviewDoctor($question_id);
+               reviewDoctor($question_id);
               // $('#rate_div').show();
             }
 

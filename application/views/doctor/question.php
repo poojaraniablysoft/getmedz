@@ -49,12 +49,12 @@
 											<div class="dashboard__list-box">
 												<div class="doc-profile">
 													<div class="doc--pic">
-														<img alt = "" src ="<?php echo generateUrl('image', 'getDoctorProfilePic', array(intval($reply['orquestion_doctor_id']), 139, 113), "/") ?>">
+														<img alt = "" src ="<?php echo generateUrl('image', 'getDoctorProfilePic', array(intval($reply['doctor_id']), 139, 113), "/") ?>">
 													   </div>
 													   <div class="doc--content">
 														<h3><?php echo $reply['replier_name'] ?></h3>
-														   <h4>MBBS, MS Neurology, Berghingam,United Kingdom</h4>
-														   <p>MD,Medicine</p>
+														   <h4><?php echo $reply['degrees'];?>, <?php echo $reply['doctor_city'];?>,<?php echo $reply['state_name'];?></h4>
+														   <p><?php echo $reply['category_name'];?></p>
 												   </div>
 
 												</div>

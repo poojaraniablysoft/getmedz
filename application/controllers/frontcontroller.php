@@ -10,6 +10,7 @@ class FrontController extends Controller {
 
         $this->before_filter();
         $this->set('controller', $controller);
+		Members::doCookieLogin();
     }
 
     protected function before_filter() {

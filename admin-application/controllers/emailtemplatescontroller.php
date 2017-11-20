@@ -5,6 +5,8 @@ class EmailtemplatesController extends BackendController {
     function __construct($model, $controller, $action) {
         parent::__construct($model, $controller, $action);
         $this->Emailtemplates=new Emailtemplates();
+		$this->b_crumb = new Breadcrumb();		
+        $this->b_crumb->add("Email Templates", Utilities::generateUrl("emailtemplates"));
     }
 
     function default_action() {
@@ -44,6 +46,9 @@ class EmailtemplatesController extends BackendController {
             }
         }
         $this->set('frm', $frm);
+		
+        $this->b_crumb->add("Edit Template", Utilities::generateUrl("emailtemplates", "form"));
+       $this->set('breadcrumb', $this->b_crumb->output());
         $this->_template->render();
     }
 

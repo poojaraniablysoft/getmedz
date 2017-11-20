@@ -20,8 +20,8 @@
                                       <div class="col-md-10 col-xs-8">
                                       	    <table class="table table-responsive nowraptable ">
 												<tr><th colspan="2">Patient profile</th></tr>
-												<tr><td ><strong>Name: </strong> <?php echo $arr_question['user_name']; ?></td>
-													<td><strong>Visited Doctor:</strong> <?php echo ($arr_question['orquestion_seen_doctor']) ? Applicationconstants::$arr_yes_no[$arr_question['orquestion_seen_doctor']] : 'Not Available'; ?></td></tr>
+												<tr><td ><strong>Name: </strong> <?php echo ($arr_question['orquestion_name'])?$arr_question['orquestion_name']:$arr_question['user_name']; ?></td>
+													<td><strong>Weight:</strong> <?php echo  $arr_question['orquestion_weight']?></td></tr>
 												<tr><td ><strong>Gender:</strong> <?php echo ($arr_question['orquestion_gender']) ? Applicationconstants::$arr_gender[$arr_question['orquestion_gender']] : 'Not Available'; ?></td>
 													<td><strong>Age: </strong> <?php echo ($arr_question['orquestion_age']) ? Applicationconstants::$arr_age_year[$arr_question['orquestion_age']] : 'Not Available'; ?></td></tr>
 												<tr><td ><strong>Member Since:</strong> <?php echo displayDate($arr_question['user_added_on']); ?></td><td></td></tr>
@@ -50,12 +50,12 @@
                         <table class="table table-responsive nowraptable" id="response_table">
                             <tr><th  >Patient Health issue</th>
 							<th> <?php
-                            if ($replies) {  ?><span class="ques_reply_status" id="update_reply_<?php echo $arr_question['orquestion_id'];?>"><span >Status:</span><select name="ques_status" id="" class="ques_status" onchange="updateReply(<?php echo $arr_question['orquestion_id'];?>,this.value)">
+                            /* if ($replies) {  ?><span class="ques_reply_status" id="update_reply_<?php echo $arr_question['orquestion_id'];?>"><span >Status:</span><select name="ques_status" id="" class="ques_status" onchange="updateReply(<?php echo $arr_question['orquestion_id'];?>,this.value)">
 													<?php  foreach(Applicationconstants::$arr_reply_status as $key=> $val){?>
 													<option <?php if($key==$arr_question['orquestion_reply_status']){ echo"selected=selected"; } ?>  value="<?php echo $key;?>"><?php echo $val;?></option>
 													<?php } ?>
 												</select></span>
-									<?php }?>			
+									<?php } */?>			
 												</th></tr>
 
                             <tr><td colspan="2" class="question-bg"><span class="red_title">Question</span><?php echo $arr_question['orquestion_question']; ?><div class="posted_time">Asked by <?php echo $arr_question['user_name'];?> on <?php echo date("D, dS M Y h:i T", strtotime($arr_question['order_date'])); ?>
@@ -84,6 +84,18 @@
                             <?php } ?>
 							</td></tr>
                         </table>
+                    </div>
+					 <div class="sectionbody">
+                        <table class="table table-responsive nowraptable" id="response_table">
+                            <tr><th   >Assignment History</th>
+							</tr>
+							<?php foreach($assignmentHistory as $history){?>
+							<tr>
+								<td>Question Assigned to <?php echo $history['doctor_name'];?></td>
+							</tr>
+							<?php } ?>
+
+                          </table>
                     </div>
                 </section>
 

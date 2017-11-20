@@ -13,8 +13,8 @@ if((strpos(($_SERVER['SERVER_NAME']),'poojarani.4demo.biz')>0   )?true:false){
 	    define('CONF_WEBROOT_URL', '/');
 
     define('CONF_DB_SERVER', 'localhost');
-    define('CONF_DB_USER', 'developer');
-    define('CONF_DB_PASS', 'developer');
+    define('CONF_DB_USER', 'poojarani');
+    define('CONF_DB_PASS', 'poojarani');
     define('CONF_DB_NAME', 'poojarani_getmedz');
 }elseif((strpos(($_SERVER['SERVER_NAME']),'staging.4demo.biz')>0   )?true:false){
     define('CONF_WEBROOT_URL', '/');

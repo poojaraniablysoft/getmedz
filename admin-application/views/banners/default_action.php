@@ -15,7 +15,7 @@ if (!SYSTEM_INIT)
                
 				<section class="section">
 				<div class="sectionhead"><h4>Manage - Banners </h4>
-					<?php if($canAdd):?>
+					<?php/*  if($canAdd):?>
 						<ul class="actions">
                                 <li class="droplink">
                                     <a href="javascript:void(0);"><i class="ion-android-more-vertical icon"></i></a>
@@ -26,7 +26,7 @@ if (!SYSTEM_INIT)
                                     </div>
                                 </li>
                             </ul>
-					 <?php endif;?>
+					 <?php endif; */?>
 				
 				</div>
                 
@@ -55,13 +55,13 @@ if (!SYSTEM_INIT)
 												endif; ?></td>
 												<td class="text-center" nowrap="nowrap">
 												<ul class="actions">
-													<?php if ($row['banner_status']==0):?>
+													<?php /* if ($row['banner_status']==0):?>
 														<li><a href="javascript:;"  title="Enable" class="toggleswitch actives" onclick="UpdateBannerStatus('<?php echo $row['banner_id'] ?>', $(this));"><i  class="ion-checkmark icon inactive" ></i></a></li>
 													<?php  else : ?>
 														  <li> <a href="javascript:;" onclick="UpdateBannerStatus('<?php echo $row['banner_id'] ?>', $(this));"  title="Disable" class="toggleswitch" ><i  class="ion-checkmark icon active" ></i></a></li>
-													<?php endif; ?>
+													<?php endif;  */?>
 													<li><a href="<?php echo generateUrl('banners', 'form', array($row['banner_id']))?>" title="Edit"><i class="ion-edit icon"></i></a></li>
-													<li><a  href="javascript:void(0);" onclick="ConfirmBannerDelete('<?php echo $row['banner_id'] ?>', $(this));" title="Delete"><i class="ion-android-delete icon"></i></a></li>													
+													<!--li><a  href="javascript:void(0);" onclick="ConfirmBannerDelete('<?php //echo $row['banner_id'] ?>', $(this));" title="Delete"><i class="ion-android-delete icon"></i></a></li-->													
 													</ul>
 												
 												</td>

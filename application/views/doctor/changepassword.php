@@ -43,6 +43,7 @@
 						  
                             <td colspan="2">
 							<?php echo $frm->getFieldHtml('btn_submit'); ?>
+							<?php echo $frm->getExternalJs(); ?>
 							
                           </tr>
                         </tbody>

@@ -16,24 +16,24 @@
                     	<li><div class="box box--white">
                             <div class="stats stats--first">
                                 <img src="/images/fixed/questions.svg" class="stats__icon">
-                                <p> <?php echo getLabel('L_My_Total_Questions');?> </p>
-                                <h2><?php echo $menu_count['all_question']?></h2>
+                                <p> <?php echo Utilities::getLabel('L_My_Total_Questions');?> </p>
+                                <h2><?php echo $allQuestions?></h2>
                                 <a href="<?php echo generateUrl('doctor', 'questions'); ?>" class="stats__link"></a>
                             </div>
                         </div></li>
                         <li><div class="box box--white">
                             <div class="stats stats--second">
                                 <img src="/images/fixed/answers.svg" class="stats__icon">
-                                <p> <?php echo getLabel('L_My_Answered_Questions');?> </p>
-                                <h2><?php echo $menu_count['answered_question']?></h2>
+                                <p> <?php echo Utilities::getLabel('L_My_Answered_Questions');?> </p>
+                                <h2><?php echo $answeredQuestions?></h2>
                                 <a href="<?php echo generateUrl('doctor', 'myansweredquestions'); ?>" class="stats__link"></a>
                             </div>
                         </div></li>
                         <li><div class="box box--white">
                             <div class="stats stats--third">
                                 <img src="/images/fixed/unanswered.svg" class="stats__icon">
-                                <p> <?php echo getLabel('L_My_Unanswered_Questions');?></p>
-                                <h2><?php echo $menu_count['unanswered_question']?></h2>
+                                <p> <?php echo Utilities::getLabel('L_My_Unanswered_Questions');?></p>
+                                <h2><?php echo $unansweredQuestions?></h2>
                                 <a href="<?php echo generateUrl('doctor', 'unansweredquestions'); ?>" class="stats__link"></a>
                             </div>
                         </div></li>
@@ -42,8 +42,8 @@
                     
                 
                 </div>
-                <h2 class="dashboard_subtitle"><?php echo getLabel('L_Patient_Follow_Up_Questions');?> </h2>
-				<?php  include getViewsPath() . 'common/doctor/latest_questions.php'; ?>
+                <h2 class="dashboard_subtitle"><?php echo Utilities::getLabel('L_Patient_Follow_Up_Questions');?> </h2>
+				<?php  include getViewsPath() . 'doctor/listquestions.php'; ?>
                
                 </div>
                 </div>

@@ -62,14 +62,13 @@ defined('SYSTEM_INIT') or die('Invalid Usage');
 
         <!--wrapper start here-->
         <main id="wrapper">
-
-
+			
 
             <!--header start here-->
             <header id="header">
                 <div class="headerwrap">
                     <div class="one_third_grid"><a href="javascript:void(0);" class="menutrigger"></a></div>
-                    <div class="one_third_grid logo"><a style="color:#fff" href="<?php echo generateUrl(); ?>"><img src="/images/logo.png" alt="<?php echo CONF_WEBSITE_NAME; ?>"></a></div>
+                    <div class="one_third_grid logo"><a style="color:#fff" href="<?php echo generateUrl(); ?>"><img src="<?php echo generateUrl('image', 'site_admin_logo',array(CONF_ADMIN_LOGO), CONF_WEBROOT_URL)?>" alt="<?php echo CONF_WEBSITE_NAME; ?>"></a></div>
                     <div class="one_third_grid">
                         <a href="<?php echo generateUrl('admin', 'logout'); ?>" title="Logout" class="logout"></a>
                     </div>

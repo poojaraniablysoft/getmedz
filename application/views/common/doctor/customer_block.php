@@ -3,7 +3,7 @@
 	<div class="patient--details">
 	  <table class="table nopadding table-responsive ">
 		<tr>
-		  <td><strong><?php echo Utilities::getLabel('LBL_Name');?>: </strong> <?php echo $arr_question['orquestion_name']; ?></td>
+		  <td><strong><?php echo Utilities::getLabel('LBL_Name');?>: </strong> <?php echo ($arr_question['orquestion_name'])?$arr_question['orquestion_name']:$arr_question['user_name']; ?></td>
 		  <td><strong><?php echo Utilities::getLabel('LBL_Email');?>: </strong> <?php echo $arr_question['user_email']; ?></td>
 		   
 		</tr>

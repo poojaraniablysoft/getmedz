@@ -29,24 +29,58 @@ class CustomerController extends FrontController {
     }
 
     public function default_action() {
+		
+		
        global $db;	 
+	   
+	   
+	    $user_id = Members::getLoggedUserID();
+        $question = new Question();
+		$questionSrch =   new searchBase('tbl_question_replies');
+		$questionSrch->addMultipleFields(array('Count(reply_view)as newReplies','reply_orquestion_id'));
+		$questionSrch->doNotCalculateRecords();
+		$questionSrch->doNotLimitRecords();
+		$questionSrch->addCondition('reply_by','=',Question::QUESTION_REPLIED_BY_DOCTOR);
+		$questionSrch->addCondition('reply_view','=',0);
+        $question = $question->searchQuestions();
+        $question->joinTable('tbl_question_replies', 'LEFT JOIN', 'r.reply_orquestion_id=oq.orquestion_id ', 'r');
+        $question->joinTable('('.$questionSrch->getQuery().')', 'LEFT JOIN', 'rv.reply_orquestion_id=oq.orquestion_id ', 'rv');
+        $question->joinTable('tbl_doctor_reviews', 'LEFT JOIN', 'review_doctor_id=doctor_id and review_question_id = oq.orquestion_id', 'rev');
+
+        $question->addMultipleFields(array(
+            'CONCAT_WS(" ",user_first_name,user_last_name) as customer_name',
+            'order_date',
+            'orquestion_question',
+            'orquestion_id',
+            'reply_text',
+            'count(DISTINCT reply_id) as count_replies',
+            'user_id',
+            'reply_approved',
+            'order_id',
+            'reply_id',
+            'orquestion_status',
+            'doctor_id',
+            'CONCAT_WS(" ",doctor_first_name,doctor_last_name) as doctor_name',
+            '(CASE WHEN doctor_is_online=1 AND DATE_SUB(NOW(),INTERVAL 10 MINUTE)< doctor_last_activity THEN 1 ELSE 0 END) as doctor_online',
+            'AVG(review_rating) as doc_rating','newReplies',
+        ));
+        //  $question->addCondition('reply_approved','=','1');
+        $question->addGroupBy('orquestion_id');
+        $question->addOrder('orquestion_id', 'DESC');
+        //Searching Critreia
+        $question->addCondition('order_user_id', '=', $user_id);
+		$question->addCondition('orquestion_status', '=',Question::QUESTION_REPLIED_BY_DOCTOR);
+		$question->setPageSize(5);		
+		$result = $question ->getResultSet();
+        $rs = $question->getResultSet(); 
+		$pending_questions = $db->fetch_all($result);
 		$questions = new QUESTION();
-		$pending_question = $questions->getQuestionByCategory(Question::QUESTION_PENDING);
-		$pending_question->setPageSize(5);		
-        $rs = $pending_question->getResultSet();
-		$pending_questions = $db->fetch_all($rs);
-		$all_questions = $questions->getQuestionByCategory();
-		$rs = $all_questions->getResultSet();		 
-		$all_question_count = $all_questions->recordCount($rs);	
-		$pending_que = $questions->getQuestionByCategory(Question::QUESTION_PENDING);
-		$rs = $pending_que->getResultSet();		 
-		$pending_question_count = $pending_que->recordCount($rs);
-		$accepted_que = $questions->getQuestionByCategory(Question::QUESTION_ACCEPTED);
-		$rs = $accepted_que->getResultSet();		 
-		$accepted_question_count = $accepted_que->recordCount($rs);		
+		$all_questions = $questions->getQuestionsCount();		
+		$pending_question_count = $questions->getQuestionsCount(Question::QUESTION_ASSIGNED);
+		$accepted_question_count = $questions->getQuestionsCount(Question::QUESTION_ACCEPTED);
         $this->set('selected_menu', 'dashboard');
         $this->set('arr_listing', $pending_questions);
-        $this->set('all_question_count', $all_question_count);
+        $this->set('all_question_count', $all_questions);
         $this->set('pending_question_count', $pending_question_count);
         $this->set('accepted_question_count', $accepted_question_count);
         $this->render();
@@ -97,9 +131,18 @@ class CustomerController extends FrontController {
         $post = Syspage::getPostedVar();
         $user_id = Members::getLoggedUserID();
         $question = new Question();
+		 $questionSrch =   new searchBase('tbl_question_replies');
+		 $questionSrch->addMultipleFields(array('Count(reply_view)as newReplies','reply_orquestion_id'));
+		  $questionSrch->doNotCalculateRecords();
+		  $questionSrch->doNotLimitRecords();
+		  
+		  
+		  $questionSrch->addCondition('reply_by','=',Question::QUESTION_REPLIED_BY_DOCTOR);
+		  $questionSrch->addCondition('reply_view','=',0);
         $question = $question->searchQuestions();
         $question->joinTable('tbl_question_replies', 'LEFT JOIN', 'r.reply_orquestion_id=oq.orquestion_id ', 'r');
-        $question->joinTable('tbl_doctor_reviews', 'LEFT JOIN', 'review_doctor_id=doctor_id', 'rev');
+        $question->joinTable('('.$questionSrch->getQuery().')', 'LEFT JOIN', 'rv.reply_orquestion_id=oq.orquestion_id ', 'rv');
+        $question->joinTable('tbl_doctor_reviews', 'LEFT JOIN', 'review_doctor_id=doctor_id and review_question_id = oq.orquestion_id', 'rev');
 
         $question->addMultipleFields(array(
             'CONCAT_WS(" ",user_first_name,user_last_name) as customer_name',
@@ -107,6 +150,7 @@ class CustomerController extends FrontController {
             'orquestion_question',
             'orquestion_id',
             'reply_text',
+			
             'count(DISTINCT reply_id) as count_replies',
             'user_id',
             'reply_approved',
@@ -116,7 +160,7 @@ class CustomerController extends FrontController {
             'doctor_id',
             'CONCAT_WS(" ",doctor_first_name,doctor_last_name) as doctor_name',
             '(CASE WHEN doctor_is_online=1 AND DATE_SUB(NOW(),INTERVAL 10 MINUTE)< doctor_last_activity THEN 1 ELSE 0 END) as doctor_online',
-            'AVG(review_rating) as doc_rating'
+            'AVG(review_rating) as doc_rating','newReplies',
         ));
         //  $question->addCondition('reply_approved','=','1');
         $question->addGroupBy('orquestion_id');
@@ -181,10 +225,9 @@ class CustomerController extends FrontController {
 
     public function question($orquestion_id) {
 
-        global $db;
-        if (!Members::isUserLogged()) {
-            redirectUser(generateUrl('members', 'login'));
-        }
+          global $db;
+
+
         Syspage::addCss(array(
             "css$selected_css_folder/jquery.rating.css"
         ));
@@ -193,13 +236,20 @@ class CustomerController extends FrontController {
             'js/jquery.rating.pack.js',
             'js/jquery.rating.js'
         ));
+
         $post = Syspage::getPostedVar();
+
         $question = new Question();
 
         $orquestion_id = intval($orquestion_id);
-        if (intval($orquestion_id) <= 0)
-            die('Invalid Input');
+        if (intval($orquestion_id) <= 0){
+			
+				dieJsonError(Utilities::getLabel('LBL_Invalid_Input'));
+		}
+
         $srch = $question->searchQuestions();
+        $srch->joinTable('tbl_question_replies', 'LEFT JOIN', 'r.reply_orquestion_id=oq.orquestion_id AND reply_approved=1 AND reply_by=' . Question::QUESTION_REPLIED_BY_DOCTOR, 'r');
+        $srch->joinTable('tbl_doctor_reviews', 'LEFT JOIN', 'review_question_id=orquestion_id', 'rev');
         $srch->addCondition('orquestion_id', '=', $orquestion_id);
 
         $logged_user_type = Members::getLoggedUserAttribute('user_type');
@@ -207,47 +257,58 @@ class CustomerController extends FrontController {
         if ($logged_user_type == Members::CUSTOMER_USER_TYPE) {
             $srch->addCondition('order_user_id', '=', $user_id);
         } else {
-            die('Invalid Access');
+            dieJsonError(Utilities::getLabel('LBL_Invalid_Access'));
         }
 
 
 
-        $srch->addMultipleFields(array('orquestion_status', 'orquestion_id', 'order_user_id', 'order_id', 'orquestion_question', 'orquestion_doctor_id', 'orquestion_med_history', 'orquestion_seen_doctor', 'order_date', 'CONCAT(user_first_name," " , user_last_name) as user_name', 'orquestion_age', 'orquestion_gender', 'user_added_on', 'user_added_on', 'user_email', 'user_id', 'COUNT(file_id) as have_file'));
+        $srch->addMultipleFields(array(
+            'CONCAT_WS(" ",user_first_name,user_last_name) as customer_name',
+            'order_date',
+            'orquestion_question',
+            'orquestion_id',
+            'reply_text',
+            'count(DISTINCT reply_id) as count_replies',
+            'user_id',
+            'reply_approved',
+            'order_id',
+            'reply_id',
+            'orquestion_status',
+            'doctor_id',
+			'doctor_email',
+            'CONCAT_WS(" ",doctor_first_name,doctor_last_name) as doctor_name',
+            '(CASE WHEN doctor_is_online=1 AND DATE_SUB(NOW(),INTERVAL 10 MINUTE)< doctor_last_activity THEN 1 ELSE 0 END) as doctor_online',
+            'AVG(review_rating) as doc_rating',
+            'count(file_record_id) as attachments',
+        ));
+        //  $question->addCondition('reply_approved','=','1');
         $srch->addGroupBy('orquestion_id');
-        $rs = $srch->getResultSet();
-        $arr_question = $db->fetch($rs);
-        $this->set('arr_question', $arr_question);
-        $doctor_id = Members::getLoggedUserID();
-        if ($arr_question['orquestion_doctor_id'] > 0) {
-            $srch = $question->getReplies();
-            $srch->joinTable('tbl_files', 'LEFT JOIN', 'file_record_id=reply_id  AND file_record_type=' . Files::QUESTION_ATTACHMENT);
-            $srch->addCondition('reply_orquestion_id', '=', $orquestion_id);
-            //$srch->addCondition('file_record_type','=',QUESTION::REPLY_TYPE);
-            $srch->addFld(array('r.*', 'order_user_id', '(CASE WHEN '
-                . 'reply_by=' . Question::QUESTION_REPLIED_BY_DOCTOR . '
-                      THEN CONCAT_WS(" ",doctor_first_name,doctor_last_name) ELSE CONCAT_WS(" ",user_first_name,user_last_name) END) as replier_name', 'count(file_record_id) as attachments')
-            );
-            $srch->addGroupBy('reply_id');
-            $rs = $srch->getResultSet();
+        $srch->addOrder('orquestion_id', 'DESC');
+        //Searching Critreia
 
-            $replies = $db->fetch_all($rs);
 
-            $this->set('replies', $replies);
-            $replyFrm = $this->getReplyFrm($orquestion_id);
-            $this->set('replyFrm', $replyFrm);
-            $data['reply_orquestion_id'] = $orquestion_id;
-            $replyFrm->fill($data);
-            $upFrm = $this->getFileUploadForm();
-            $upFrm->addHiddenField("action", "action", "upload_file");
-            $this->set('upFrm', $upFrm);
-        }
-        $review_data['review_doctor_id'] = $arr_question['orquestion_doctor_id'];
-        $review_data['review_order_id'] = $arr_question['order_id'];
-        $review_frm = $this->getReviewForm();
-        $review_frm->fill($review_data);
-        $this->set('review_frm', $review_frm);
+        $this->set('question', $srch->fetch());
+
+
+        $replyFrm = $this->getReplyFrm($orquestion_id);
+        $this->set('replyFrm', $replyFrm);
+        $data['reply_orquestion_id'] = $orquestion_id;
+        $replyFrm->fill($data);
+
+        $upFrm = $this->getFileUploadForm();
+        $upFrm->addHiddenField("action", "action", "upload_file");
+        $this->set('upFrm', $upFrm);
+		$this->updateReplyView($orquestion_id);
         $this->_template->render();
     }
+	
+	public function updateReplyView($questionId){
+		$data['reply_orquestion_id'] = $questionId;
+		$data['reply_view'] = 1;
+		$data['reply_by'] = Question::QUESTION_REPLIED_BY_DOCTOR;		
+		$question = new Question();		
+		$question->updateReplyView($data);
+	}
 
     function getReplyFrm($orquestion_id) {
 
@@ -296,9 +357,11 @@ class CustomerController extends FrontController {
         $post['reply_by'] = Members::getLoggedUserAttribute('user_type');
 
         $srch = $this->Question->searchQuestions();
+		$srch->joinTable('tbl_medical_categories', 'LEFT JOIN', 'd.doctor_med_category=mc.category_id  ', 'mc');
+		$srch->joinTable('tbl_states', 'LEFT JOIN', 'd.doctor_state_id=s.state_id  ', 's');
         $srch->addCondition('orquestion_id', '=', $orquestion_id);
         $srch->addCondition('order_user_id', '=', Members::getLoggedUserAttribute('user_id'));
-        $srch->addMultipleFields(array('orquestion_question', 'orquestion_id', 'CONCAT(user_first_name," " , user_last_name) as user_name', 'order_date'));
+        $srch->addMultipleFields(array('orquestion_question', 'orquestion_id', 'CONCAT(user_first_name," " , user_last_name) as user_name', 'order_date','category_name','doctor_city','state_name','doctor_summary as degrees'));
         $rs = $srch->getResultSet();
         $total_record = $srch->recordCount();
 
@@ -348,7 +411,7 @@ class CustomerController extends FrontController {
             $srch->addFld(array('r.*', '(CASE WHEN '
                 . 'reply_by=' . Question::QUESTION_REPLIED_BY_DOCTOR . '
                       THEN CONCAT_WS(" ",doctor_first_name,doctor_last_name) ELSE CONCAT_WS(" ",user_first_name,user_last_name) END) as replier_name',
-                'order_date', 'count(file_record_id) as attachments')
+                'order_date', 'count(file_record_id) as attachments','category_name','doctor_city','state_name','doctor_summary as degrees')
             );
             $srch->addGroupBy('reply_id');
             $rs = $srch->getResultSet();
@@ -398,7 +461,7 @@ class CustomerController extends FrontController {
 
         $question = new Question();
         $srch = $question->searchQuestions();
-        $srch->joinTable('tbl_doctor_reviews', 'LEFT JOIN', 'review_doctor_id=doctor_id AND review_order_id=order_id', 'rev');
+        $srch->joinTable('tbl_doctor_reviews', 'LEFT JOIN', 'review_doctor_id=doctor_id AND review_question_id=orquestion_id', 'rev');
         $srch->addCondition('orquestion_id', '=', $question_id);
         $srch->addCondition('order_user_id', '=', $user_id);
 
@@ -414,7 +477,7 @@ class CustomerController extends FrontController {
             'CONCAT_WS(" ",doctor_first_name,doctor_last_name) as doctor_name',
             'review_id',
             '(CASE WHEN review_doctor_id IS NOT NULL THEN review_doctor_id ELSE doctor_id END) as review_doctor_id ',
-            '(CASE WHEN review_order_id IS NOT NULL THEN review_order_id ELSE order_id END) as review_order_id',
+            '(CASE WHEN review_question_id IS NOT NULL THEN review_question_id ELSE orquestion_id END) as review_question_id',
             'review_rating',
             'review_text'
         ));
@@ -458,7 +521,7 @@ class CustomerController extends FrontController {
 
 
         $frm->addHiddenField('', 'review_doctor_id');
-        $frm->addHiddenField('', 'review_order_id');
+        $frm->addHiddenField('', 'review_question_id');
         //$frm->setAction(generateUrl('carlisting', 'review_setup'));
         $frm->setValidatorJsObjectName('reviewValidator');
         $frm->setOnSubmit('submitReviewSetup(this, reviewValidator); return(false);');
@@ -761,9 +824,9 @@ class CustomerController extends FrontController {
 
 
         $review_doctor_id = intval($post['review_doctor_id']);
-        $review_order_id = $post['review_order_id'];
+        $review_question_id = $post['review_question_id'];
         /* Invalid request */
-        if ($review_doctor_id < 1 || $review_order_id == '') {
+        if ($review_doctor_id < 1 || $review_question_id == '') {
             dieJsonError('Invalid request');
         }
 
@@ -772,7 +835,7 @@ class CustomerController extends FrontController {
         $srch = $this->customer->search_reviews();
         $srch->addCondition('review_user_id', '=', intval($user_id));
         $srch->addCondition('review_doctor_id', '=', intval($review_doctor_id));
-        $srch->addCondition('review_order_id', '=', $review_order_id);
+        $srch->addCondition('review_question_id', '=', $review_question_id);
         $rs = $srch->getResultSet();
         if ($review_row = $db->fetch($rs)) {
             $review_id = $review_row['review_id'];
@@ -894,7 +957,7 @@ class CustomerController extends FrontController {
         $srch->joinTable('tbl_files', 'LEFT JOIN', 'file_record_id=reply_id  AND file_record_type=' . Files::QUESTION_ATTACHMENT);
         $srch->addCondition('reply_orquestion_id', '=', $orquestion_id);
         $srch->addCondition('order_user_id', '=', $user_id);
-        $srch->addFld(array('r.*', 'order_user_id', 'count(file_record_id) as attachments', 'CONCAT_WS(" ",doctor_first_name,doctor_last_name) as doctor_name', 'CONCAT_WS(" ",user_first_name,user_last_name) as customer_name', 'user_id', 'doctor_id', '(CASE WHEN doctor_is_online=1 AND DATE_SUB(NOW(),INTERVAL 10 MINUTE)< doctor_last_activity THEN 1 ELSE 0 END) as doctor_online')
+        $srch->addFld(array('r.*', 'order_user_id', 'count(file_record_id) as attachments', 'CONCAT_WS(" ",doctor_first_name,doctor_last_name) as doctor_name', 'CONCAT_WS(" ",user_first_name,user_last_name) as customer_name', 'user_id', 'd.doctor_id', '(CASE WHEN doctor_is_online=1 AND DATE_SUB(NOW(),INTERVAL 10 MINUTE)< doctor_last_activity THEN 1 ELSE 0 END) as doctor_online','category_name','doctor_city','state_name','degrees')
         );
         $srch->addGroupBy('reply_id');
 

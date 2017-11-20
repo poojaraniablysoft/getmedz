@@ -127,7 +127,10 @@ if (count($arr_listing) > 0) {
 	}
 } 
 else {
-		echo '<section class="section"><section class="sectionbody space">You do not have any follow up questions</section></section>';
+		echo '<div class="msg-box"><div class="no-items" >
+  <div class="no-items-media"> <img src="'.CONF_WEBROOT_URL.'images/noitemfound.png" alt="" /> </div>
+  <h2>'. Utilities::getLabel('LBL_NO_Questions_Found').'</h2>
+</div></div>';
 	}
 	?>
 <?php include getViewsPath() . 'pagination.php'; ?>
