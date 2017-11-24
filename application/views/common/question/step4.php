@@ -115,6 +115,8 @@
 				echo $questionFrm->getFieldHtml('orquestion_phone');
 				$questionFrm->getField('orquestion_email')->fldType = 'hidden';
 				echo $questionFrm->getFieldHtml('orquestion_email');
+				$questionFrm->getField('orquestion_term')->fldType = 'hidden';
+				echo $questionFrm->getFieldHtml('orquestion_term');
 				echo $questionFrm->getFieldHtml('step');
 				echo $questionFrm->getFieldHtml('file_name'); 
 				$questionFrm->getField('orquestion_med_history')->fldType = 'hidden';

@@ -94,7 +94,9 @@
 				$questionFrm->getField('orquestion_email')->fldType = 'hidden';
 				echo $questionFrm->getFieldHtml('orquestion_email');
 				echo $questionFrm->getFieldHtml('step');
-				echo $questionFrm->getFieldHtml('file_name'); 
+				echo $questionFrm->getFieldHtml('file_name');
+				$questionFrm->getField('orquestion_term')->fldType = 'hidden';
+				echo $questionFrm->getFieldHtml('orquestion_term');				
 				$questionFrm->getField('orquestion_med_history')->fldType = 'hidden';
 				echo $questionFrm->getFieldHtml('orquestion_med_history');
 			?>

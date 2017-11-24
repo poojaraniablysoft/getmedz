@@ -279,7 +279,7 @@ class Question extends Model {
 		$frm->addHiddenField('Doctor Selection', 'orquestion_doctor_id', '','doctor_id');
         $frm->addHiddenField('', 'file_name');
         $frm->addHiddenField('', 'user_id',Members::getLoggedUserID(),'user_id');
-		$frm->addCheckBox( '', 'orquestion_term', '1' ,'term');
+		$frm->addCheckBox( 'Terms', 'orquestion_term', '1' ,'term');
 		
         $frm->addSubmitButton('', 'btn_login', Utilities::getLabel('LBL_Next'), 'btn_login', ' class="button button--fill button--secondary fl--right"');
         return $frm;
