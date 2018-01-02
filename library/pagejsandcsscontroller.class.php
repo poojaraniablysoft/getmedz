@@ -2,6 +2,7 @@
 class PagejsandcssController{
 	
 	function js(){
+		header('Content-Type: text/javascript');
 		$arr_pth = func_get_args();
 		$flname = $arr_pth[count($arr_pth)-1];
 		unset($arr_pth[count($arr_pth)-1]);
@@ -11,6 +12,7 @@ class PagejsandcssController{
 	}
 	
 	function css(){
+		header('Content-Type: text/css');
 		$arr_pth = func_get_args();
 		$flname = $arr_pth[count($arr_pth)-1];
 		unset($arr_pth[count($arr_pth)-1]);
