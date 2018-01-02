@@ -70,7 +70,7 @@
 
 			</li>
 			
-			<li class="<?php if (($controller=="Search")  ):?>active <?php endif; ?>"><a href="<?php echo generateUrl('Search', ''); ?>"  class="<?php if (($controller=="Search") ):?>active <?php endif; ?>">Search</a> </li>
+			<!--li class="<?php //if (($controller=="Search")  ):?>active <?php //endif; ?>"><a href="<?php //echo generateUrl('Search', ''); ?>"  class="<?php //if (($controller=="Search") ):?>active <?php //endif; ?>">Search</a> </li-->
             <li class="<?php if (($controller=="questions")  ):?>active <?php endif; ?>"><a href="<?php echo generateUrl('questions', ''); ?>"  class="<?php if (($controller=="questions") ):?>active <?php endif; ?>">Questions Management</a> </li>
 			<li class="<?php if (($controller=="transactions")  ):?>active <?php endif; ?>"><a href="<?php echo generateUrl('transactions', ''); ?>"  class="<?php if (($controller=="transactions") ):?>active <?php endif; ?>">Transaction Management</a> </li>
            
